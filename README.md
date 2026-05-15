@@ -28,7 +28,7 @@ Plataforma web para gestionar torneos y competencias de Bowls Argentina: clubes,
    npm run dev
    ```
 
-   Abrir [http://localhost:3000](http://localhost:3000).
+   Abrir [http://localhost:3000](http://localhost:3000). Vas a ver la cabecera, el inicio (público y gestión), el listado de **torneos publicados** (vacío hasta tener datos en Supabase), **inicio de sesión / registro** y un **panel** mínimo para usuarios con sesión.
 
 ## Base de datos (Supabase / PostgreSQL)
 

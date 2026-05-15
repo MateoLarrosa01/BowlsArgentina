@@ -33,3 +33,13 @@ export async function createServerSupabaseClient() {
     },
   });
 }
+
+/** Igual que createServerSupabaseClient pero devuelve null si faltan env (páginas con estado vacío amable). */
+export async function createServerSupabaseClientOpcional() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) {
+    return null;
+  }
+  return createServerSupabaseClient();
+}
