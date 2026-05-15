@@ -32,6 +32,7 @@ alwaysApply: true
 
 - **Tablas y columnas en español**, en `snake_case` (ej. `clubes`, `jugadores`, `id_torneo`, `creado_en`, `parciales_encuentro`).
 - El análisis funcional puede nombrar entidades en inglés como referencia; el **esquema físico en PostgreSQL (Supabase)** se implementa en español salvo que el equipo acuerde una excepción puntual.
+- **RLS**: la lectura anónima aplica a torneos `publicado` y datos ligados; la escritura operativa va dirigida a roles `admin_fab` / `super_admin` (hasta incorporar reglas de capitán).
 
 ## Estilo de código
 
