@@ -36,6 +36,8 @@ Las migraciones versionadas viven en `supabase/migrations/`. Para aplicarlas en 
 
 Los identificadores del esquema (tablas y columnas) están en **español**, alineados a las convenciones del proyecto.
 
+Las migraciones posteriores al esquema inicial habilitan **RLS** y la tabla `perfiles` (rol vinculado a `auth.users`). El rol por defecto al registrarse es `capitan`. Las **escrituras** operativas (torneos, clubes, encuentros, etc.) exigen un usuario con rol `admin_fab` o `super_admin` en `perfiles`. Tras el primer registro en Auth, ejecutá en el SQL Editor un `update` sobre `public.perfiles` para asignar ese rol al `id` del usuario que administrará la federación.
+
 ## Scripts
 
 | Comando        | Descripción              |
