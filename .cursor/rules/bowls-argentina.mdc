@@ -20,9 +20,9 @@ alwaysApply: true
 
 ## Reglas de encuentro y tabla
 
-- Encuentro con cuatro parciales (single, doble, terceto, cuarteto); parcial ganado aporta puntos según modelo acordado en dominio.
-- Si el encuentro queda **2–2 en parciales**, el **resultado del partido es 1 punto para cada equipo** (empate).
-- **Desempates por shots y parciales** aplican a la **tabla de posiciones**, no al resultado binario del partido en ese caso.
+- Encuentro con cuatro parciales (single, doble, terceto, cuarteto). Cada parcial ganado suma **2 puntos** al bando ganador de ese parcial (modelo FAB del análisis funcional).
+- Si el encuentro queda **2–2 en parciales**, el **resultado del partido para la tabla de puntos de encuentros es 1 punto para cada equipo** (empate a nivel partido).
+- **Desempates por shots y parciales** aplican a la **tabla de posiciones**, no al reparto de ese punto de partido en el empate 2–2.
 
 ## Estilo de código
 
