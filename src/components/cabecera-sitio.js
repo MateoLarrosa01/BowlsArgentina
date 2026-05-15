@@ -68,8 +68,11 @@ export function CabeceraSitio() {
     router.push("/");
   }
 
-  const esAdmin =
-    rol === "super_admin" || rol === "admin_fab";
+  const panelActivo =
+    pathname === "/panel" ||
+    (pathname.startsWith("/panel") && !pathname.startsWith("/panel/admin"));
+
+  const esAdmin = rol === "super_admin" || rol === "admin_fab";
 
   return (
     <header className="border-b border-emerald-900/30 bg-emerald-950 text-emerald-50 shadow-md">
@@ -102,11 +105,23 @@ export function CabeceraSitio() {
                 </Link>
               );
             })}
+            {listo && esAdmin && (
+              <Link
+                href="/panel/admin"
+                className={`rounded-lg px-3 py-2 text-base font-medium transition-colors min-h-[44px] inline-flex items-center ${
+                  pathname.startsWith("/panel/admin")
+                    ? "bg-emerald-800 text-white"
+                    : "text-emerald-100 hover:bg-emerald-900/80 hover:text-white"
+                }`}
+              >
+                Administración
+              </Link>
+            )}
             {listo && sesion && (
               <Link
                 href="/panel"
                 className={`rounded-lg px-3 py-2 text-base font-medium transition-colors min-h-[44px] inline-flex items-center ${
-                  pathname.startsWith("/panel")
+                  panelActivo
                     ? "bg-emerald-800 text-white"
                     : "text-emerald-100 hover:bg-emerald-900/80 hover:text-white"
                 }`}

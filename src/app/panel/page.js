@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { esRolAdministracion } from "@/lib/auth/requerir-admin";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
 import { createServerSupabaseClientOpcional } from "@/lib/supabase/server";
 
@@ -46,8 +47,20 @@ export default async function PanelPage() {
     <ContenedorPagina>
       <h1 className="text-2xl font-bold text-stone-900">Mi panel</h1>
       <p className="mt-2 text-base text-stone-600">
-        Resumen de tu sesión. Las herramientas de gestión se irán sumando acá.
+        Resumen de tu sesión. Desde acá accedés a la administración si tenés rol
+        de federación.
       </p>
+
+      {esRolAdministracion(perfil?.rol) && (
+        <div className="mt-6">
+          <Link
+            href="/panel/admin"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-emerald-700 px-6 text-base font-semibold text-white shadow-sm hover:bg-emerald-600"
+          >
+            Ir a administración (demo MVP)
+          </Link>
+        </div>
+      )}
 
       <section className="mt-8 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <dl className="space-y-4 text-base">
@@ -65,8 +78,9 @@ export default async function PanelPage() {
 
         {(perfil?.rol === "super_admin" || perfil?.rol === "admin_fab") && (
           <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
-            Tenés permisos de administración: podés operar sobre torneos, clubes
-            y encuentros cuando conectemos las pantallas de ABM.
+            Podés cargar <strong>clubes</strong>, armar un <strong>torneo</strong>{" "}
+            (divisiones, equipos y encuentros) y <strong>publicarlo</strong> para
+            que se vea en la vista pública sin necesidad de cuenta.
           </div>
         )}
 
