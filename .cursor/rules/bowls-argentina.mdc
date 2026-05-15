@@ -1,0 +1,29 @@
+---
+description: Stack, producto y reglas de negocio acordadas para Bowls Argentina
+alwaysApply: true
+---
+
+# Bowls Argentina — contexto de desarrollo
+
+## Stack
+
+- **Frontend**: Next.js (App Router), **React y JavaScript** (no TypeScript salvo decisión explícita).
+- **Hosting**: Vercel.
+- **Backend / datos / auth**: Supabase (PostgreSQL + Auth u equivalente del proyecto).
+- Clientes: `src/lib/supabase/client.js` (navegador) y `src/lib/supabase/server.js` (servidor).
+
+## Producto (MVP)
+
+- Primer corte: **torneos interclubes**; modelos “abierto / invitación” como **extensión posterior**.
+- **Vista pública sin cuenta**: fixture, resultados y tablas accesibles sin login. Login solo para **gestión y administración** (y roles operativos como capitán cuando existan).
+- Contenido institucional (inicio, autoridades, etc.): **admin básico**, sin CMS pesado en el MVP.
+
+## Reglas de encuentro y tabla
+
+- Encuentro con cuatro parciales (single, doble, terceto, cuarteto); parcial ganado aporta puntos según modelo acordado en dominio.
+- Si el encuentro queda **2–2 en parciales**, el **resultado del partido es 1 punto para cada equipo** (empate).
+- **Desempates por shots y parciales** aplican a la **tabla de posiciones**, no al resultado binario del partido en ese caso.
+
+## Estilo de código
+
+- Coincidir con el estilo del repo; cambios mínimos y enfocados al pedido.
