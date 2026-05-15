@@ -30,6 +30,12 @@ Plataforma web para gestionar torneos y competencias de Bowls Argentina: clubes,
 
    Abrir [http://localhost:3000](http://localhost:3000).
 
+## Base de datos (Supabase / PostgreSQL)
+
+Las migraciones versionadas viven en `supabase/migrations/`. Para aplicarlas en un proyecto Supabase podés usar la [CLI de Supabase](https://supabase.com/docs/guides/cli) (`supabase link`, `supabase db push`) o pegar el SQL en el editor SQL del panel.
+
+Los identificadores del esquema (tablas y columnas) están en **español**, alineados a las convenciones del proyecto.
+
 ## Scripts
 
 | Comando        | Descripción              |

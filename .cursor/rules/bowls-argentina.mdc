@@ -24,6 +24,15 @@ alwaysApply: true
 - Si el encuentro queda **2–2 en parciales**, el **resultado del partido para la tabla de puntos de encuentros es 1 punto para cada equipo** (empate a nivel partido).
 - **Desempates por shots y parciales** aplican a la **tabla de posiciones**, no al reparto de ese punto de partido en el empate 2–2.
 
+## Convenciones de repositorio (GitHub)
+
+- **Ramas, títulos de PR y comentarios** (descripción, revisiones, issues relacionados) **en español**, con nombres claros y kebab-case en ramas (ej. `feat/carga-resultados-encuentro`).
+
+## Convenciones de base de datos
+
+- **Tablas y columnas en español**, en `snake_case` (ej. `clubes`, `jugadores`, `id_torneo`, `creado_en`, `parciales_encuentro`).
+- El análisis funcional puede nombrar entidades en inglés como referencia; el **esquema físico en PostgreSQL (Supabase)** se implementa en español salvo que el equipo acuerde una excepción puntual.
+
 ## Estilo de código
 
 - Coincidir con el estilo del repo; cambios mínimos y enfocados al pedido.
