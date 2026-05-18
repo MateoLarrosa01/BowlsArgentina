@@ -32,6 +32,32 @@ export default function Home() {
         </div>
       </section>
 
+      <aside className="mt-10 rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 text-left text-sm leading-relaxed text-sky-950 shadow-sm">
+        <strong className="text-sky-950">¿Todavía sin base de datos?</strong> Creá un
+        proyecto gratis en{" "}
+        <a
+          href="https://supabase.com/dashboard"
+          className="font-semibold text-sky-900 underline underline-offset-2"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Supabase
+        </a>
+        , ejecutá en el SQL Editor el archivo{" "}
+        <code className="rounded bg-white px-1.5 py-0.5 text-xs text-stone-800">
+          supabase/bootstrap-inicial.sql
+        </code>
+        , luego creá{" "}
+        <code className="rounded bg-white px-1.5 py-0.5 text-xs text-stone-800">
+          .env.local
+        </code>{" "}
+        con la URL y la clave <em>anon</em>. Guía detallada:{" "}
+        <code className="rounded bg-white px-1.5 py-0.5 text-xs text-stone-800">
+          Documentacion/primer-arranque-supabase.md
+        </code>
+        .
+      </aside>
+
       <section className="mt-14 grid gap-6 sm:grid-cols-3">
         {[
           {

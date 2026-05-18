@@ -14,21 +14,34 @@ Plataforma web para gestionar torneos y competencias de Bowls Argentina: clubes,
 
 ## Configuración local
 
+**Si todavía no tenés proyecto en Supabase**, seguí la guía paso a paso (crear proyecto, pegar SQL, `.env.local`, primer usuario admin):
+
+→ **[`Documentacion/primer-arranque-supabase.md`](Documentacion/primer-arranque-supabase.md)**
+
+Resumen rápido:
+
 1. Clonar el repositorio e instalar dependencias:
 
    ```bash
    npm install
    ```
 
-2. Variables de entorno: copiar `.env.example` a `.env.local` y completar las claves del proyecto en [Supabase](https://supabase.com/dashboard) (Project Settings → API).
+2. En Supabase: **SQL Editor** → pegar y ejecutar el archivo **`supabase/bootstrap-inicial.sql`** (o las dos migraciones en `supabase/migrations/` en orden).
 
-3. Servidor de desarrollo:
+3. Crear **`.env.local`** en la raíz con `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` (los obtenés en **Project Settings → API**). Podés partir de `.env.example`.
+
+4. Servidor de desarrollo:
 
    ```bash
    npm run dev
    ```
 
-   Abrir [http://localhost:3000](http://localhost:3000). Vas a ver la cabecera, el inicio (público y gestión), el listado de **torneos publicados** (vacío hasta tener datos en Supabase), **inicio de sesión / registro** y un **panel** mínimo para usuarios con sesión.
+   Abrir [http://localhost:3000](http://localhost:3000).
+
+   Vas a ver la cabecera, el inicio (público y gestión), el listado de **torneos publicados** (vacío hasta tener datos en Supabase), **inicio de sesión / registro** y un **panel** mínimo para usuarios con sesión.
+
+5. **Demo para mostrar al cliente (MVP)**  
+   Con un usuario **admin_fab** o **super_admin** en `perfiles`: entrá a **Administración** (`/panel/admin`), cargá **clubes**, creá un **torneo** en borrador, agregá **divisiones**, **equipos** y **encuentros**, cambiá el estado del torneo a **publicado** y abrí la **vista pública** desde el enlace del torneo o desde **Torneos** en el menú principal (sin cuenta).
 
 ## Base de datos (Supabase / PostgreSQL)
 
@@ -49,7 +62,8 @@ Las migraciones posteriores al esquema inicial habilitan **RLS** y la tabla `per
 
 ## Documentación
 
-El análisis funcional y material de referencia están en `Documentacion/`.
+- Análisis funcional y material de referencia: `Documentacion/`.
+- **Primer arranque (Supabase + `.env.local`)**: [`Documentacion/primer-arranque-supabase.md`](Documentacion/primer-arranque-supabase.md).
 
 ## Despliegue
 
