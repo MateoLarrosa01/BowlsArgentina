@@ -28,6 +28,10 @@ Esta guía asume que **todavía no tenés** proyecto en Supabase ni archivo `.en
    - Si todo va bien, deberías ver “Success” sin errores en rojo.
    - Ese archivo incluye el **esquema** (clubes, torneos, etc.) y las **políticas RLS** + tabla `perfiles` + trigger en `auth.users`.
 
+2b. **Flujo real (capitán y resultados):** ejecutá también en el SQL Editor el archivo  
+   `supabase/migrations/20260516100000_capitan_en_equipo_y_rls_carga.sql`  
+   (columna capitán en equipos, políticas de carga y función de tabla de posiciones).
+
 **Si preferís no usar el archivo único:** ejecutá en orden, en dos queries separadas, el contenido de:
 
 - `supabase/migrations/20260515120000_esquema_mvp_interclubes.sql`  

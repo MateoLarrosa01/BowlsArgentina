@@ -39,7 +39,7 @@ export default async function PanelAdminInicioPage() {
           Administración
         </h1>
         <p className="mt-2 max-w-2xl text-base text-stone-600">
-          Herramientas para armar el <strong>demo del MVP</strong>: cargá clubes,
+          Herramientas de la federación: cargá clubes,
           un torneo en borrador, divisiones y equipos, publicá el torneo y
           revisá la vista pública con fixture básico.
         </p>

@@ -34,7 +34,7 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
 
   const { data: equiposRaw } = await supabase
     .from("equipos")
-    .select("id, nombre, id_division, id_club, clubes ( nombre )")
+    .select("id, nombre, id_division, id_club, id_usuario_capitan, clubes ( nombre )")
     .eq("id_torneo", id);
 
   const equipos = equiposRaw ?? [];
@@ -264,6 +264,17 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
                   name="nombre"
                   required
                   placeholder="Ej. San Martín A"
+                  className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 px-3 text-base"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-stone-600">
+                  Correo del capitán (usuario ya registrado)
+                </label>
+                <input
+                  name="correo_capitan"
+                  type="email"
+                  placeholder="capitan@club.com"
                   className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 px-3 text-base"
                 />
               </div>

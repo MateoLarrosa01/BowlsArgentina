@@ -97,8 +97,23 @@ export async function crearEquipo(formData) {
   const idDivision = formData.get("id_division")?.toString();
   const idClub = formData.get("id_club")?.toString();
   const nombre = formData.get("nombre")?.toString().trim();
+  const correoCapitan = formData.get("correo_capitan")?.toString().trim();
   if (!idTorneo || !idDivision || !idClub || !nombre) {
     errTorneo(idTorneo ?? "", "Completá división, club y nombre del equipo.");
+  }
+
+  let idUsuarioCapitan = null;
+  if (correoCapitan) {
+    const { data: uid, error: errUid } = await supabase.rpc("id_usuario_por_correo", {
+      p_correo: correoCapitan,
+    });
+    if (errUid || !uid) {
+      errTorneo(
+        idTorneo,
+        "No encontramos un usuario registrado con ese correo de capitán.",
+      );
+    }
+    idUsuarioCapitan = uid;
   }
 
   const { error } = await supabase.from("equipos").insert({
@@ -106,6 +121,7 @@ export async function crearEquipo(formData) {
     id_division: idDivision,
     id_club: idClub,
     nombre,
+    id_usuario_capitan: idUsuarioCapitan,
   });
 
   if (error) {
