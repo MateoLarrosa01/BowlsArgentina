@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
+import { PlantelEquipo } from "@/components/plantel-equipo";
 import {
   actualizarTorneo,
   crearDivision,
@@ -71,6 +72,27 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
     .select("id, nombre")
     .eq("activo", true)
     .order("nombre");
+
+  const idsEquipos = equipos.map((e) => e.id);
+  const plantelPorEquipo = new Map();
+  if (idsEquipos.length > 0) {
+    const { data: filasPlantel } = await supabase
+      .from("equipo_jugadores")
+      .select("id, id_equipo, id_jugador, jugadores ( id, nombre, apellido )")
+      .in("id_equipo", idsEquipos);
+    for (const f of filasPlantel ?? []) {
+      if (!plantelPorEquipo.has(f.id_equipo)) {
+        plantelPorEquipo.set(f.id_equipo, []);
+      }
+      plantelPorEquipo.get(f.id_equipo).push(f);
+    }
+  }
+
+  const { data: todosJugadores } = await supabase
+    .from("jugadores")
+    .select("id, nombre, apellido, id_club, activo")
+    .eq("activo", true)
+    .order("apellido");
 
   return (
     <ContenedorPagina>
@@ -219,20 +241,31 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
               <span className="text-sm font-normal text-stone-500">(orden {div.orden})</span>
             </h2>
 
-            <h3 className="mt-6 text-base font-semibold text-stone-800">Equipos</h3>
+            <h3 className="mt-6 text-base font-semibold text-stone-800">Equipos y plantel</h3>
             {eqDiv.length === 0 ? (
               <p className="mt-2 text-sm text-stone-600">Sin equipos en esta división.</p>
             ) : (
-              <ul className="mt-2 space-y-1 text-sm text-stone-800">
-                {eqDiv.map((eq) => (
-                  <li key={eq.id}>
-                    <strong>{eq.nombre}</strong>
-                    {nombreClub(eq) ? (
-                      <span className="text-stone-600"> — {nombreClub(eq)}</span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-2 space-y-2">
+                {eqDiv.map((eq) => {
+                  const plantel = plantelPorEquipo.get(eq.id) ?? [];
+                  const idsEnPlantel = new Set(
+                    plantel.map((f) => f.id_jugador),
+                  );
+                  const disponibles = (todosJugadores ?? []).filter(
+                    (j) => j.id_club === eq.id_club && !idsEnPlantel.has(j.id),
+                  );
+                  return (
+                    <PlantelEquipo
+                      key={eq.id}
+                      equipo={eq}
+                      plantel={plantel}
+                      jugadoresDisponibles={disponibles}
+                      idTorneo={id}
+                      nombreClub={nombreClub(eq)}
+                    />
+                  );
+                })}
+              </div>
             )}
 
             <form action={crearEquipo} className="mt-4 grid gap-3 rounded-xl border border-stone-200 bg-white p-4 sm:grid-cols-2">

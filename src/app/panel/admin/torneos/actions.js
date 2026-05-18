@@ -187,3 +187,64 @@ export async function crearEncuentro(formData) {
   revalidatePath(`/torneos/${idTorneo}`);
   redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
 }
+
+export async function agregarJugadorAlPlantel(formData) {
+  const supabase = await createServerSupabaseClient();
+  const idTorneo = formData.get("id_torneo")?.toString();
+  const idEquipo = formData.get("id_equipo")?.toString();
+  const idJugador = formData.get("id_jugador")?.toString();
+
+  if (!idTorneo || !idEquipo || !idJugador) {
+    errTorneo(idTorneo ?? "", "Elegí un jugador para el plantel.");
+  }
+
+  const { data: equipo } = await supabase
+    .from("equipos")
+    .select("id_club, id_torneo")
+    .eq("id", idEquipo)
+    .maybeSingle();
+
+  const { data: jugador } = await supabase
+    .from("jugadores")
+    .select("id_club, activo")
+    .eq("id", idJugador)
+    .maybeSingle();
+
+  if (!equipo || !jugador || equipo.id_club !== jugador.id_club) {
+    errTorneo(idTorneo, "El jugador debe pertenecer al mismo club que el equipo.");
+  }
+  if (!jugador.activo) {
+    errTorneo(idTorneo, "El jugador no está activo.");
+  }
+
+  const { error } = await supabase.from("equipo_jugadores").insert({
+    id_equipo: idEquipo,
+    id_jugador: idJugador,
+  });
+
+  if (error) {
+    errTorneo(idTorneo, error.message);
+  }
+
+  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
+  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+}
+
+export async function quitarJugadorDelPlantel(formData) {
+  const supabase = await createServerSupabaseClient();
+  const idTorneo = formData.get("id_torneo")?.toString();
+  const idFila = formData.get("id_fila")?.toString();
+
+  if (!idTorneo || !idFila) {
+    errTorneo(idTorneo ?? "", "No se pudo quitar el jugador del plantel.");
+  }
+
+  const { error } = await supabase.from("equipo_jugadores").delete().eq("id", idFila);
+
+  if (error) {
+    errTorneo(idTorneo, error.message);
+  }
+
+  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
+  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+}

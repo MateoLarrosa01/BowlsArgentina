@@ -22,7 +22,7 @@ El demo mergeado en `main` sirvió para validar stack, Supabase y una recorrida 
 | Fase | Rama / PR | Entregable |
 |------|-----------|------------|
 | **1** (actual) | `feat/flujo-real-carga-resultados-capitán` | Capitán en equipo, RLS capitán, dominio de puntos, UI carga parciales, tabla pública básica |
-| **2** | `feat/gestion-jugadores-y-plantel` | ABM jugadores, plantel por equipo |
+| **2** | `feat/gestion-jugadores-y-plantel` | ABM jugadores, plantel por equipo *(en curso)* |
 | **3** | `feat/gestion-federacion-refactor` | Renombrar copy “demo”, rutas `/gestion`, contenido institucional admin |
 | **4** | `feat/fixture-avanzado` | Fechas, filtros, estados masivos |
 | **5** | `feat/estadisticas-fase-2` | Fuera del MVP contractual |
@@ -36,5 +36,5 @@ El demo mergeado en `main` sirvió para validar stack, Supabase y una recorrida 
 ## Qué queda del demo sin tocar aún
 
 - Textos “demo MVP” en panel (se limpian en fase 3).
-- Sin ABM de jugadores en UI.
+- ABM de jugadores y plantel en gestión de torneo (fase 2).
 - Sin CMS institucional completo.

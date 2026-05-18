@@ -9,8 +9,13 @@ const tarjetas = [
     href: "/panel/admin/clubes",
   },
   {
+    titulo: "Jugadores",
+    descripcion: "Alta de jugadores por club para armar planteles.",
+    href: "/panel/admin/jugadores",
+  },
+  {
     titulo: "Torneos",
-    descripcion: "Crear torneos, divisiones, equipos y encuentros de demostración.",
+    descripcion: "Torneos, divisiones, equipos, plantel y fixture.",
     href: "/panel/admin/torneos",
   },
 ];
@@ -22,6 +27,9 @@ export default async function PanelAdminInicioPage() {
     .select("id", { count: "exact", head: true });
   const { count: nTorneos } = await supabase
     .from("torneos")
+    .select("id", { count: "exact", head: true });
+  const { count: nJugadores } = await supabase
+    .from("jugadores")
     .select("id", { count: "exact", head: true });
 
   return (
@@ -46,6 +54,7 @@ export default async function PanelAdminInicioPage() {
         <p className="mt-3 text-sm text-stone-500">
           Resumen rápido:{" "}
           <strong>{nClubes ?? 0}</strong> clubes ·{" "}
+          <strong>{nJugadores ?? 0}</strong> jugadores ·{" "}
           <strong>{nTorneos ?? 0}</strong> torneos en base.
         </p>
       </header>
