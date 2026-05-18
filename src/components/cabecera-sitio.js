@@ -105,6 +105,18 @@ export function CabeceraSitio() {
                 </Link>
               );
             })}
+            {listo && sesion && rol === "capitan" && (
+              <Link
+                href="/panel/mis-encuentros"
+                className={`rounded-lg px-3 py-2 text-base font-medium transition-colors min-h-[44px] inline-flex items-center ${
+                  pathname.startsWith("/panel/mis-encuentros")
+                    ? "bg-emerald-800 text-white"
+                    : "text-emerald-100 hover:bg-emerald-900/80 hover:text-white"
+                }`}
+              >
+                Mis encuentros
+              </Link>
+            )}
             {listo && esAdmin && (
               <Link
                 href="/panel/admin"

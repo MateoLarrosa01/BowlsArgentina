@@ -57,7 +57,18 @@ export default async function PanelPage() {
             href="/panel/admin"
             className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-emerald-700 px-6 text-base font-semibold text-white shadow-sm hover:bg-emerald-600"
           >
-            Ir a administración (demo MVP)
+            Gestión de la federación
+          </Link>
+        </div>
+      )}
+
+      {perfil?.rol === "capitan" && (
+        <div className="mt-4">
+          <Link
+            href="/panel/mis-encuentros"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-emerald-700 bg-white px-6 text-base font-semibold text-emerald-900 hover:bg-emerald-50"
+          >
+            Cargar resultados de mis encuentros
           </Link>
         </div>
       )}

@@ -70,10 +70,18 @@ export default async function TorneoDetallePage({ params }) {
   const { data: encuentros } = await supabase
     .from("encuentros")
     .select(
-      "id, numero_fecha, fecha_hora, estado, id_division, id_equipo_local, id_equipo_visitante",
+      "id, numero_fecha, fecha_hora, estado, id_division, id_equipo_local, id_equipo_visitante, puntos_encuentro_local, puntos_encuentro_visitante",
     )
     .eq("id_torneo", id)
     .order("numero_fecha", { ascending: true });
+
+  const { data: clasificacion } = await supabase
+    .from("clasificacion_equipos")
+    .select(
+      "id_division, id_equipo, partidos_jugados, partidos_ganados, partidos_empatados, partidos_perdidos, puntos, disparos_a_favor, disparos_en_contra, equipos ( nombre )",
+    )
+    .eq("id_torneo", id)
+    .order("puntos", { ascending: false });
 
   const mapaNombre = Object.fromEntries(
     (equipos ?? []).map((e) => [e.id, e.nombre]),
@@ -182,18 +190,72 @@ export default async function TorneoDetallePage({ params }) {
                     {mapaNombre[en.id_equipo_visitante] ?? "—"}
                   </p>
                 </div>
-                <span className="text-sm capitalize text-emerald-800">{en.estado}</span>
+                <span className="text-sm text-emerald-800">
+                  {en.estado === "jugado"
+                    ? `${en.puntos_encuentro_local ?? 0} – ${en.puntos_encuentro_visitante ?? 0}`
+                    : en.estado}
+                </span>
               </li>
             );
           })}
         </ul>
       </section>
 
-      <section className="mt-10 rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-6 text-center text-sm text-stone-600">
-        Próximo paso del MVP:{" "}
-        <strong className="text-stone-800">tabla de posiciones</strong> y{" "}
-        <strong className="text-stone-800">carga de parciales</strong> por
-        capitán.
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold text-stone-900">Tabla de posiciones</h2>
+        {(divisiones ?? []).map((div) => {
+          const filas = (clasificacion ?? []).filter(
+            (f) => f.id_division === div.id,
+          );
+          return (
+            <div key={div.id} className="mt-6">
+              <h3 className="text-base font-semibold text-emerald-950">{div.nombre}</h3>
+              {filas.length === 0 ? (
+                <p className="mt-2 text-sm text-stone-600">
+                  Sin datos de clasificación todavía.
+                </p>
+              ) : (
+                <div className="mt-3 overflow-x-auto rounded-xl border border-stone-200 bg-white">
+                  <table className="w-full min-w-[32rem] text-left text-sm">
+                    <thead className="border-b border-stone-200 bg-stone-50 text-stone-600">
+                      <tr>
+                        <th className="px-3 py-2 font-medium">Equipo</th>
+                        <th className="px-2 py-2 text-center">PJ</th>
+                        <th className="px-2 py-2 text-center">PG</th>
+                        <th className="px-2 py-2 text-center">PE</th>
+                        <th className="px-2 py-2 text-center">PP</th>
+                        <th className="px-2 py-2 text-center">Pts</th>
+                        <th className="px-2 py-2 text-center">Sh+</th>
+                        <th className="px-2 py-2 text-center">Sh−</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filas.map((fila) => {
+                        const eq = Array.isArray(fila.equipos)
+                          ? fila.equipos[0]
+                          : fila.equipos;
+                        return (
+                          <tr key={fila.id_equipo} className="border-b border-stone-100">
+                            <td className="px-3 py-2 font-medium text-stone-900">
+                              {eq?.nombre ?? "—"}
+                            </td>
+                            <td className="px-2 py-2 text-center">{fila.partidos_jugados}</td>
+                            <td className="px-2 py-2 text-center">{fila.partidos_ganados}</td>
+                            <td className="px-2 py-2 text-center">{fila.partidos_empatados}</td>
+                            <td className="px-2 py-2 text-center">{fila.partidos_perdidos}</td>
+                            <td className="px-2 py-2 text-center font-semibold">{fila.puntos}</td>
+                            <td className="px-2 py-2 text-center">{fila.disparos_a_favor}</td>
+                            <td className="px-2 py-2 text-center">{fila.disparos_en_contra}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </section>
     </ContenedorPagina>
   );
