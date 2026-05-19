@@ -1,6 +1,14 @@
 import Link from "next/link";
+import { FiltrosFixture } from "@/components/filtros-fixture";
 import { requerirSesion } from "@/lib/auth/requerir-sesion";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
+import {
+  etiquetaEstadoEncuentro,
+  filtrarEncuentros,
+  formatoFechaHoraLegible,
+  leerFiltrosFixture,
+  numerosFechaDisponibles,
+} from "@/lib/dominio/fixture";
 
 export const metadata = {
   title: "Mis encuentros",
@@ -28,12 +36,14 @@ export default async function MisEncuentrosPage({ searchParams }) {
       .select(
         `
         id,
+        id_division,
         numero_fecha,
+        fecha_hora,
         estado,
         puntos_encuentro_local,
         puntos_encuentro_visitante,
         torneos ( nombre, estado ),
-        divisiones ( nombre ),
+        divisiones ( id, nombre ),
         equipo_local:equipos!encuentros_id_equipo_local_fkey ( nombre ),
         equipo_visitante:equipos!encuentros_id_equipo_visitante_fkey ( nombre )
       `,
@@ -41,6 +51,20 @@ export default async function MisEncuentrosPage({ searchParams }) {
       .or(filtro)
       .order("numero_fecha", { ascending: true });
     encuentros = data ?? [];
+  }
+
+  const filtros = leerFiltrosFixture(sp);
+  const encuentrosVisibles = filtrarEncuentros(encuentros, filtros);
+  const fechasJornada = numerosFechaDisponibles(encuentros);
+  const divisionesUnicas = [];
+  const idsDiv = new Set();
+  for (const en of encuentros) {
+    const d = Array.isArray(en.divisiones) ? en.divisiones[0] : en.divisiones;
+    const idDiv = en.id_division ?? d?.id;
+    if (idDiv && d?.nombre && !idsDiv.has(idDiv)) {
+      idsDiv.add(idDiv);
+      divisionesUnicas.push({ id: idDiv, nombre: d.nombre });
+    }
   }
 
   const nombreEq = (rel) => {
@@ -88,8 +112,23 @@ export default async function MisEncuentrosPage({ searchParams }) {
         </p>
       )}
 
+      {encuentros.length > 0 && (
+        <FiltrosFixture
+          basePath="/panel/mis-encuentros"
+          divisiones={divisionesUnicas}
+          fechas={fechasJornada}
+          valores={filtros}
+        />
+      )}
+
+      {encuentros.length > 0 && encuentrosVisibles.length === 0 && (
+        <p className="mt-6 text-sm text-amber-800">
+          Ningún encuentro coincide con los filtros.
+        </p>
+      )}
+
       <ul className="mt-8 space-y-3">
-        {encuentros.map((en) => {
+        {encuentrosVisibles.map((en) => {
           const torneo = Array.isArray(en.torneos) ? en.torneos[0] : en.torneos;
           const division = Array.isArray(en.divisiones)
             ? en.divisiones[0]
@@ -98,6 +137,7 @@ export default async function MisEncuentrosPage({ searchParams }) {
             en.estado === "jugado"
               ? `${en.puntos_encuentro_local ?? 0} – ${en.puntos_encuentro_visitante ?? 0}`
               : null;
+          const cuando = formatoFechaHoraLegible(en.fecha_hora);
           return (
             <li key={en.id}>
               <Link
@@ -107,12 +147,13 @@ export default async function MisEncuentrosPage({ searchParams }) {
                 <p className="text-sm text-stone-500">
                   {torneo?.nombre ?? "Torneo"} · {division?.nombre ?? "División"}
                   {en.numero_fecha != null ? ` · Fecha ${en.numero_fecha}` : ""}
+                  {cuando ? ` · ${cuando}` : ""}
                 </p>
                 <p className="mt-2 text-lg font-semibold text-stone-900">
                   {nombreEq(en.equipo_local)} vs {nombreEq(en.equipo_visitante)}
                 </p>
-                <p className="mt-1 text-sm capitalize text-emerald-800">
-                  {en.estado}
+                <p className="mt-1 text-sm text-emerald-800">
+                  {etiquetaEstadoEncuentro(en.estado)}
                   {marcador ? ` · ${marcador}` : ""}
                 </p>
               </Link>

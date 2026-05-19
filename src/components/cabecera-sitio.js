@@ -7,15 +7,23 @@ import {
   createBrowserSupabaseClient,
   supabaseConfigurado,
 } from "@/lib/supabase/client";
+import {
+  SLUGS_INSTITUCIONALES_NAV,
+  rutaInstitucional,
+} from "@/lib/contenido-institucional";
 
 const enlacesPublicos = [
   { href: "/", etiqueta: "Inicio" },
   { href: "/torneos", etiqueta: "Torneos" },
+  ...SLUGS_INSTITUCIONALES_NAV.map((p) => ({
+    href: rutaInstitucional(p.slug),
+    etiqueta: p.etiqueta,
+  })),
 ];
 
 function etiquetaRol(rol) {
   if (rol === "super_admin") return "Superadmin";
-  if (rol === "admin_fab") return "Administración FAB";
+  if (rol === "admin_fab") return "Gestión FAB";
   if (rol === "capitan") return "Capitán";
   return rol ?? "";
 }
@@ -70,7 +78,7 @@ export function CabeceraSitio() {
 
   const panelActivo =
     pathname === "/panel" ||
-    (pathname.startsWith("/panel") && !pathname.startsWith("/panel/admin"));
+    (pathname.startsWith("/panel") && !pathname.startsWith("/gestion"));
 
   const esAdmin = rol === "super_admin" || rol === "admin_fab";
 
@@ -90,7 +98,9 @@ export function CabeceraSitio() {
               const activo =
                 e.href === "/"
                   ? pathname === "/"
-                  : pathname.startsWith(e.href);
+                  : e.href.startsWith("/institucional/")
+                    ? pathname === e.href
+                    : pathname.startsWith(e.href);
               return (
                 <Link
                   key={e.href}
@@ -119,14 +129,14 @@ export function CabeceraSitio() {
             )}
             {listo && esAdmin && (
               <Link
-                href="/panel/admin"
+                href="/gestion"
                 className={`rounded-lg px-3 py-2 text-base font-medium transition-colors min-h-[44px] inline-flex items-center ${
-                  pathname.startsWith("/panel/admin")
+                  pathname.startsWith("/gestion")
                     ? "bg-emerald-800 text-white"
                     : "text-emerald-100 hover:bg-emerald-900/80 hover:text-white"
                 }`}
               >
-                Administración
+                Gestión
               </Link>
             )}
             {listo && sesion && (

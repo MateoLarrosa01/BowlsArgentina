@@ -85,7 +85,7 @@ En producción conviene volver a activar la confirmación.
    ```
 
 3. Cerrá sesión en la web y volvé a **Iniciar sesión** (o refrescá con **Salir** y entrá de nuevo).  
-   Deberías ver **Administración** en la cabecera y poder entrar a `/panel/admin`.
+   Deberías ver **Gestión** en la cabecera y poder entrar a `/gestion`.
 
 Si necesitás el `id` a mano: **Authentication** → **Users** → copiá el UUID del usuario y usá:
 
@@ -95,12 +95,15 @@ update public.perfiles set rol = 'admin_fab' where id = 'PEGA-UUID-AQUÍ';
 
 ---
 
-## 6. Probar el flujo demo (cliente)
+## 6. Probar el flujo operativo
 
-1. **Administración** → **Clubes**: cargá al menos dos clubes.  
+1. **Gestión** → **Clubes**: cargá al menos dos clubes.  
 2. **Torneos** → **Nuevo torneo** → agregá división, equipos y encuentros.  
 3. En el torneo, cambiá el estado a **Publicado** y guardá.  
-4. Abrí **Torneos** en el menú principal (sin sesión) y verificá que el torneo y el fixture se ven públicos.
+4. Abrí **Torneos** en el menú principal (sin sesión) y verificá que el torneo y el fixture se ven públicos.  
+5. **Gestión** → **Contenido institucional**: editá Quiénes somos / Contacto y revisá `/institucional/quienes-somos`.
+
+> Si tu base se creó antes de la fase 3, ejecutá además en el SQL Editor la migración `supabase/migrations/20260518120000_paginas_institucionales.sql`.
 
 ---
 

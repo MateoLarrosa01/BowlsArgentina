@@ -3,13 +3,18 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { parseFechaHoraLocal } from "@/lib/dominio/fixture";
+import {
+  buscarEncuentroDuplicado,
+  mensajeErrorEncuentroDuplicado,
+} from "@/lib/dominio/validar-encuentro";
 
 function errTorneo(id, msg) {
-  redirect(`/panel/admin/torneos/${id}?mensaje=${encodeURIComponent(msg)}`);
+  redirect(`/gestion/torneos/${id}?mensaje=${encodeURIComponent(msg)}`);
 }
 
 function errTorneos(msg) {
-  redirect(`/panel/admin/torneos?mensaje=${encodeURIComponent(msg)}`);
+  redirect(`/gestion/torneos?mensaje=${encodeURIComponent(msg)}`);
 }
 
 export async function crearTorneo(formData) {
@@ -35,9 +40,9 @@ export async function crearTorneo(formData) {
     errTorneos(error?.message ?? "No se pudo crear el torneo.");
   }
 
-  revalidatePath("/panel/admin/torneos");
+  revalidatePath("/gestion/torneos");
   revalidatePath("/torneos");
-  redirect(`/panel/admin/torneos/${data.id}?ok=1`);
+  redirect(`/gestion/torneos/${data.id}?ok=1`);
 }
 
 export async function actualizarTorneo(formData) {
@@ -59,11 +64,11 @@ export async function actualizarTorneo(formData) {
     errTorneo(id, error.message);
   }
 
-  revalidatePath("/panel/admin/torneos");
-  revalidatePath(`/panel/admin/torneos/${id}`);
+  revalidatePath("/gestion/torneos");
+  revalidatePath(`/gestion/torneos/${id}`);
   revalidatePath("/torneos");
   revalidatePath(`/torneos/${id}`);
-  redirect(`/panel/admin/torneos/${id}?ok=1`);
+  redirect(`/gestion/torneos/${id}?ok=1`);
 }
 
 export async function crearDivision(formData) {
@@ -86,9 +91,9 @@ export async function crearDivision(formData) {
     errTorneo(idTorneo, error.message);
   }
 
-  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
   revalidatePath(`/torneos/${idTorneo}`);
-  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
 }
 
 export async function crearEquipo(formData) {
@@ -128,9 +133,9 @@ export async function crearEquipo(formData) {
     errTorneo(idTorneo, error.message);
   }
 
-  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
   revalidatePath(`/torneos/${idTorneo}`);
-  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
 }
 
 export async function crearEncuentro(formData) {
@@ -141,6 +146,8 @@ export async function crearEncuentro(formData) {
   const visitante = formData.get("id_equipo_visitante")?.toString();
   const numFechaRaw = formData.get("numero_fecha")?.toString().trim();
   const numeroFecha = numFechaRaw ? Number.parseInt(numFechaRaw, 10) : null;
+  const fechaHoraRaw = formData.get("fecha_hora")?.toString();
+  const fechaHora = parseFechaHoraLocal(fechaHoraRaw);
 
   if (!idTorneo || !idDivision || !local || !visitante) {
     errTorneo(idTorneo ?? "", "Elegí división y ambos equipos.");
@@ -170,22 +177,40 @@ export async function crearEncuentro(formData) {
     );
   }
 
+  const { duplicado, error: errDup } = await buscarEncuentroDuplicado(supabase, {
+    idTorneo,
+    idDivision,
+    numeroFecha,
+    idEquipoLocal: local,
+    idEquipoVisitante: visitante,
+  });
+  if (errDup) {
+    errTorneo(idTorneo, errDup.message);
+  }
+  if (duplicado) {
+    errTorneo(
+      idTorneo,
+      "Ya hay un encuentro entre esos equipos en esta división y jornada (incluye local/visitante invertido).",
+    );
+  }
+
   const { error } = await supabase.from("encuentros").insert({
     id_torneo: idTorneo,
     id_division: idDivision,
     id_equipo_local: local,
     id_equipo_visitante: visitante,
     numero_fecha: numeroFecha,
+    fecha_hora: fechaHora,
     estado: "programado",
   });
 
   if (error) {
-    errTorneo(idTorneo, error.message);
+    errTorneo(idTorneo, mensajeErrorEncuentroDuplicado(error));
   }
 
-  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
   revalidatePath(`/torneos/${idTorneo}`);
-  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
 }
 
 export async function agregarJugadorAlPlantel(formData) {
@@ -226,8 +251,8 @@ export async function agregarJugadorAlPlantel(formData) {
     errTorneo(idTorneo, error.message);
   }
 
-  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
-  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
 }
 
 export async function quitarJugadorDelPlantel(formData) {
@@ -245,6 +270,91 @@ export async function quitarJugadorDelPlantel(formData) {
     errTorneo(idTorneo, error.message);
   }
 
-  revalidatePath(`/panel/admin/torneos/${idTorneo}`);
-  redirect(`/panel/admin/torneos/${idTorneo}?ok=1`);
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
+}
+
+export async function actualizarEncuentro(formData) {
+  const supabase = await createServerSupabaseClient();
+  const id = formData.get("id")?.toString();
+  const idTorneo = formData.get("id_torneo")?.toString();
+  const numFechaRaw = formData.get("numero_fecha")?.toString().trim();
+  const numeroFecha = numFechaRaw ? Number.parseInt(numFechaRaw, 10) : null;
+  const estado = formData.get("estado")?.toString();
+  const fechaHoraRaw = formData.get("fecha_hora")?.toString();
+  const fechaHora = parseFechaHoraLocal(fechaHoraRaw);
+
+  if (!id || !idTorneo || !estado) {
+    errTorneo(idTorneo ?? "", "Datos incompletos para actualizar el encuentro.");
+  }
+  if (!["programado", "jugado", "cancelado"].includes(estado)) {
+    errTorneo(idTorneo, "Estado de encuentro no válido.");
+  }
+  if (numFechaRaw && Number.isNaN(numeroFecha)) {
+    errTorneo(idTorneo, "Número de fecha debe ser entero.");
+  }
+
+  const { error } = await supabase
+    .from("encuentros")
+    .update({
+      numero_fecha: numeroFecha,
+      fecha_hora: fechaHora,
+      estado,
+    })
+    .eq("id", id)
+    .eq("id_torneo", idTorneo);
+
+  if (error) {
+    errTorneo(idTorneo, error.message);
+  }
+
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
+  revalidatePath(`/torneos/${idTorneo}`);
+  revalidatePath("/panel/mis-encuentros");
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
+}
+
+/** Cambia estado de todos los encuentros de una jornada (y división opcional). */
+export async function cambiarEstadoEncuentrosMasivo(formData) {
+  const supabase = await createServerSupabaseClient();
+  const idTorneo = formData.get("id_torneo")?.toString();
+  const idDivision = formData.get("id_division")?.toString() || null;
+  const numFechaRaw = formData.get("numero_fecha")?.toString().trim();
+  const numeroFecha = numFechaRaw ? Number.parseInt(numFechaRaw, 10) : null;
+  const estado = formData.get("estado")?.toString();
+
+  if (!idTorneo || numeroFecha == null || Number.isNaN(numeroFecha) || !estado) {
+    errTorneo(idTorneo ?? "", "Indicá jornada y estado para el cambio masivo.");
+  }
+  if (!["programado", "cancelado"].includes(estado)) {
+    errTorneo(
+      idTorneo,
+      "En cambio masivo solo se permite programado o cancelado (jugado se define al cargar parciales).",
+    );
+  }
+
+  let query = supabase
+    .from("encuentros")
+    .update({ estado })
+    .eq("id_torneo", idTorneo)
+    .eq("numero_fecha", numeroFecha);
+
+  if (idDivision) {
+    query = query.eq("id_division", idDivision);
+  }
+
+  const { data, error } = await query.select("id");
+
+  if (error) {
+    errTorneo(idTorneo, error.message);
+  }
+
+  if (!data?.length) {
+    errTorneo(idTorneo, "No hay encuentros en esa jornada con los filtros elegidos.");
+  }
+
+  revalidatePath(`/gestion/torneos/${idTorneo}`);
+  revalidatePath(`/torneos/${idTorneo}`);
+  revalidatePath("/panel/mis-encuentros");
+  redirect(`/gestion/torneos/${idTorneo}?ok=1`);
 }

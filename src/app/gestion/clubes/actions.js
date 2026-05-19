@@ -12,7 +12,7 @@ export async function crearClub(formData) {
   const supabase = await createServerSupabaseClient();
   const nombre = formData.get("nombre")?.toString().trim();
   if (!nombre) {
-    conMensaje("/panel/admin/clubes", "El nombre del club es obligatorio.");
+    conMensaje("/gestion/clubes", "El nombre del club es obligatorio.");
   }
 
   const { error } = await supabase.from("clubes").insert({
@@ -23,12 +23,12 @@ export async function crearClub(formData) {
   });
 
   if (error) {
-    conMensaje("/panel/admin/clubes", error.message);
+    conMensaje("/gestion/clubes", error.message);
   }
 
-  revalidatePath("/panel/admin/clubes");
+  revalidatePath("/gestion/clubes");
   revalidatePath("/torneos");
-  redirect("/panel/admin/clubes?ok=1");
+  redirect("/gestion/clubes?ok=1");
 }
 
 export async function actualizarClub(formData) {
@@ -36,7 +36,7 @@ export async function actualizarClub(formData) {
   const id = formData.get("id")?.toString();
   const nombre = formData.get("nombre")?.toString().trim();
   if (!id || !nombre) {
-    conMensaje("/panel/admin/clubes", "Datos incompletos para actualizar el club.");
+    conMensaje("/gestion/clubes", "Datos incompletos para actualizar el club.");
   }
 
   const activo = ["on", "true"].includes(formData.get("activo"));
@@ -53,10 +53,10 @@ export async function actualizarClub(formData) {
     .eq("id", id);
 
   if (error) {
-    conMensaje("/panel/admin/clubes", error.message);
+    conMensaje("/gestion/clubes", error.message);
   }
 
-  revalidatePath("/panel/admin/clubes");
+  revalidatePath("/gestion/clubes");
   revalidatePath("/torneos");
-  redirect("/panel/admin/clubes?ok=1");
+  redirect("/gestion/clubes?ok=1");
 }

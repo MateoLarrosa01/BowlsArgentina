@@ -71,9 +71,9 @@ export default function Home() {
               "Clubes, equipos y encuentros con reglas alineadas al modelo interclubes.",
           },
           {
-            titulo: "Próximos pasos",
+            titulo: "Institucional y clubes",
             texto:
-              "Carga de parciales por capitán, contenido institucional y estadísticas.",
+              "Quiénes somos y contacto editables por la federación; capitán carga parciales desde el celular.",
           },
         ].map((bloque) => (
           <article

@@ -47,14 +47,14 @@ export default async function PanelPage() {
     <ContenedorPagina>
       <h1 className="text-2xl font-bold text-stone-900">Mi panel</h1>
       <p className="mt-2 text-base text-stone-600">
-        Resumen de tu sesión. Desde acá accedés a la administración si tenés rol
-        de federación.
+        Resumen de tu sesión. Desde acá accedés a la gestión de la federación si
+        tenés el rol correspondiente.
       </p>
 
       {esRolAdministracion(perfil?.rol) && (
         <div className="mt-6">
           <Link
-            href="/panel/admin"
+            href="/gestion"
             className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-emerald-700 px-6 text-base font-semibold text-white shadow-sm hover:bg-emerald-600"
           >
             Gestión de la federación

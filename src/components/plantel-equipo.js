@@ -1,4 +1,4 @@
-import { agregarJugadorAlPlantel, quitarJugadorDelPlantel } from "@/app/panel/admin/torneos/actions";
+import { agregarJugadorAlPlantel, quitarJugadorDelPlantel } from "@/app/gestion/torneos/actions";
 
 function nombreJugador(j) {
   if (!j) return "—";

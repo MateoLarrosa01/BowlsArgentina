@@ -16,8 +16,8 @@ export default async function AdminTorneosPage({ searchParams }) {
   return (
     <ContenedorPagina>
       <nav className="text-sm text-stone-500">
-        <Link href="/panel/admin" className="font-medium text-emerald-800 hover:underline">
-          Administración
+        <Link href="/gestion" className="font-medium text-emerald-800 hover:underline">
+          Gestión
         </Link>
         <span className="mx-2">/</span>
         <span className="text-stone-800">Torneos</span>
@@ -31,7 +31,7 @@ export default async function AdminTorneosPage({ searchParams }) {
           </p>
         </div>
         <Link
-          href="/panel/admin/torneos/nuevo"
+          href="/gestion/torneos/nuevo"
           className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-emerald-700 px-5 text-base font-semibold text-white hover:bg-emerald-600"
         >
           Nuevo torneo
@@ -55,7 +55,7 @@ export default async function AdminTorneosPage({ searchParams }) {
 
       {!torneos?.length && !error && (
         <p className="mt-10 rounded-xl border border-dashed border-stone-300 bg-stone-50 p-8 text-center text-stone-600">
-          No hay torneos todavía. Creá el primero para la demo.
+          No hay torneos todavía. Creá el primero con el botón de arriba.
         </p>
       )}
 
@@ -63,7 +63,7 @@ export default async function AdminTorneosPage({ searchParams }) {
         {(torneos ?? []).map((t) => (
           <li key={t.id}>
             <Link
-              href={`/panel/admin/torneos/${t.id}`}
+              href={`/gestion/torneos/${t.id}`}
               className="flex flex-col gap-1 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
