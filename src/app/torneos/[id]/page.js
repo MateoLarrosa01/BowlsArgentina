@@ -92,7 +92,7 @@ export default async function TorneoDetallePage({ params, searchParams }) {
   const { data: clasificacion } = await supabase
     .from("clasificacion_equipos")
     .select(
-      "id_division, id_equipo, partidos_jugados, partidos_ganados, partidos_empatados, partidos_perdidos, puntos, disparos_a_favor, disparos_en_contra, equipos ( nombre )",
+      "id_division, id_equipo, partidos_jugados, partidos_ganados, partidos_empatados, partidos_perdidos, puntos, disparos_a_favor, disparos_en_contra, parciales_ganados, parciales_perdidos, equipos ( nombre )",
     )
     .eq("id_torneo", id)
     .order("puntos", { ascending: false });
@@ -256,6 +256,12 @@ export default async function TorneoDetallePage({ params, searchParams }) {
                         <th className="px-2 py-2 text-center">Pts</th>
                         <th className="px-2 py-2 text-center">Sh+</th>
                         <th className="px-2 py-2 text-center">Sh−</th>
+                        <th className="px-2 py-2 text-center" title="Parciales a favor">
+                          Par+
+                        </th>
+                        <th className="px-2 py-2 text-center" title="Parciales en contra">
+                          Par−
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -275,6 +281,8 @@ export default async function TorneoDetallePage({ params, searchParams }) {
                             <td className="px-2 py-2 text-center font-semibold">{fila.puntos}</td>
                             <td className="px-2 py-2 text-center">{fila.disparos_a_favor}</td>
                             <td className="px-2 py-2 text-center">{fila.disparos_en_contra}</td>
+                            <td className="px-2 py-2 text-center">{fila.parciales_ganados}</td>
+                            <td className="px-2 py-2 text-center">{fila.parciales_perdidos}</td>
                           </tr>
                         );
                       })}

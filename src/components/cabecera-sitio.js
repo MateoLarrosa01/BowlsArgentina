@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -9,14 +10,14 @@ import {
 } from "@/lib/supabase/client";
 import {
   SLUGS_INSTITUCIONALES_NAV,
-  rutaInstitucional,
+  rutaInstitucionalNav,
 } from "@/lib/contenido-institucional";
 
 const enlacesPublicos = [
   { href: "/", etiqueta: "Inicio" },
   { href: "/torneos", etiqueta: "Torneos" },
   ...SLUGS_INSTITUCIONALES_NAV.map((p) => ({
-    href: rutaInstitucional(p.slug),
+    href: rutaInstitucionalNav(p),
     etiqueta: p.etiqueta,
   })),
 ];
@@ -88,9 +89,17 @@ export function CabeceraSitio() {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/"
-            className="text-lg font-semibold tracking-tight text-white sm:text-xl"
+            className="flex items-center gap-2 text-lg font-semibold tracking-tight text-white sm:text-xl"
           >
-            Bowls Argentina
+            <Image
+              src="/logo-federacion.png"
+              alt=""
+              width={36}
+              height={36}
+              className="rounded-full bg-white/95"
+            />
+            <span className="hidden sm:inline">Bowls Argentina</span>
+            <span className="sm:hidden">FAB</span>
           </Link>
           <span className="hidden h-6 w-px bg-emerald-700 sm:inline" aria-hidden />
           <nav className="flex flex-wrap gap-1" aria-label="Principal">
@@ -98,8 +107,8 @@ export function CabeceraSitio() {
               const activo =
                 e.href === "/"
                   ? pathname === "/"
-                  : e.href.startsWith("/institucional/")
-                    ? pathname === e.href
+                  : pathname === e.href || pathname.startsWith(`${e.href}/`)
+                    ? true
                     : pathname.startsWith(e.href);
               return (
                 <Link

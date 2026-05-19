@@ -16,7 +16,8 @@ Plataforma web para gestionar torneos y competencias de Bowls Argentina: clubes,
 
 **Si todavía no tenés proyecto en Supabase**, seguí la guía paso a paso (crear proyecto, pegar SQL, `.env.local`, primer usuario admin):
 
-→ **[`Documentacion/primer-arranque-supabase.md`](Documentacion/primer-arranque-supabase.md)**
+→ **[`Documentacion/primer-arranque-supabase.md`](Documentacion/primer-arranque-supabase.md)**  
+→ **Recorrida operativa (validar MVP):** [`Documentacion/recorrida-operativa-completa.md`](Documentacion/recorrida-operativa-completa.md)
 
 Resumen rápido:
 

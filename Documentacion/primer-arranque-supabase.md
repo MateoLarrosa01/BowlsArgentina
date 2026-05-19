@@ -95,15 +95,15 @@ update public.perfiles set rol = 'admin_fab' where id = 'PEGA-UUID-AQUÍ';
 
 ---
 
-## 6. Probar el flujo operativo
+## 6. Recorrida operativa completa
 
-1. **Gestión** → **Clubes**: cargá al menos dos clubes.  
-2. **Torneos** → **Nuevo torneo** → agregá división, equipos y encuentros.  
-3. En el torneo, cambiá el estado a **Publicado** y guardá.  
-4. Abrí **Torneos** en el menú principal (sin sesión) y verificá que el torneo y el fixture se ven públicos.  
-5. **Gestión** → **Contenido institucional**: editá Quiénes somos / Contacto y revisá `/institucional/quienes-somos`.
+Para validar federación + capitán + público en una sola vuelta, seguí:
 
-> Si tu base se creó antes de la fase 3, ejecutá además en el SQL Editor la migración `supabase/migrations/20260518120000_paginas_institucionales.sql`.
+→ **[`Documentacion/recorrida-operativa-completa.md`](recorrida-operativa-completa.md)**
+
+Resumen mínimo: clubes → torneo (borrador) → división/equipos/encuentro → **publicar** → capitán carga parciales → ver fixture y tabla sin login.
+
+> Proyecto ya existente: aplicá también las migraciones listadas en la sección 0 de esa guía (capitán, institucional, unicidad de encuentros).
 
 ---
 

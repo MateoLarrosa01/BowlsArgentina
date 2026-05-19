@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   SLUGS_INSTITUCIONALES_NAV,
-  rutaInstitucional,
+  rutaInstitucionalNav,
 } from "@/lib/contenido-institucional";
 
 export function PieSitio() {
@@ -16,7 +16,7 @@ export function PieSitio() {
           {SLUGS_INSTITUCIONALES_NAV.map((p) => (
             <Link
               key={p.slug}
-              href={rutaInstitucional(p.slug)}
+              href={rutaInstitucionalNav(p)}
               className="font-medium text-emerald-800 underline-offset-4 hover:underline"
             >
               {p.etiqueta}

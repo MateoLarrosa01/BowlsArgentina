@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Bowls Argentina — Funcionalidades MVP</title>
+  <style>
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #1c1917;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 14mm 18mm;
+    }
+    .encabezado {
+      text-align: center;
+      border-bottom: 4px solid #059669;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .encabezado img {
+      height: 72px;
+      width: auto;
+      margin-bottom: 12px;
+    }
+    .encabezado h1 {
+      margin: 0;
+      font-size: 24pt;
+      color: #064e3b;
+    }
+    .encabezado p { margin: 6px 0 0; color: #57534e; }
+    h2 {
+      color: #064e3b;
+      font-size: 14pt;
+      margin-top: 1.5em;
+      page-break-after: avoid;
+    }
+    h3 {
+      color: #047857;
+      font-size: 12pt;
+      page-break-after: avoid;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    th, td {
+      border: 1px solid #d6d3d1;
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #ecfdf5; color: #064e3b; }
+    ul { padding-left: 1.2em; }
+    li { margin: 4px 0; }
+    .nota {
+      font-size: 9.5pt;
+      color: #57534e;
+      font-style: italic;
+      margin-top: 8px;
+    }
+    .pie {
+      margin-top: 32px;
+      font-size: 9pt;
+      color: #78716c;
+      text-align: center;
+      border-top: 1px solid #d6d3d1;
+      padding-top: 12px;
+    }
+    .no-print {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 10pt;
+      border-radius: 8px;
+    }
+    @media print { .no-print { display: none; } }
+  </style>
+</head>
+<body>
+
+  <p class="no-print"><strong>Guardar como PDF:</strong> Ctrl+P → Guardar como PDF.</p>
+
+  <header class="encabezado">
+    <img src="logo-federacion.png" alt="Federación Argentina de Bowls" />
+    <h1>Bowls Argentina</h1>
+    <p>Plataforma web para torneos interclubes</p>
+    <p><strong>Documento para revisión del cliente</strong> · Versión MVP · Mayo 2026</p>
+  </header>
+
+  <h2>1. Propósito del sistema</h2>
+  <p>
+    Bowls Argentina centraliza la <strong>gestión de torneos interclubes</strong> de la federación
+    y la <strong>consulta pública</strong> de fixture, resultados y tablas de posiciones.
+  </p>
+  <table>
+    <tr><th>Perfil</th><th>¿Cuenta?</th><th>Rol</th></tr>
+    <tr><td>Público</td><td>No</td><td>Consultar torneos, fixture y clasificación</td></tr>
+    <tr><td>Federación</td><td>Sí</td><td>Gestionar clubes, torneos, fixture e institucional</td></tr>
+    <tr><td>Capitán</td><td>Sí</td><td>Cargar resultados de su equipo</td></tr>
+  </table>
+
+  <h2>2. Público (sin registrarse)</h2>
+  <h3>Inicio e institucional</h3>
+  <ul>
+    <li>Página de inicio.</li>
+    <li><strong>Quiénes somos</strong> y <strong>Contacto</strong> (editables por la federación).</li>
+  </ul>
+
+  <h3>Autoridades</h3>
+  <p>Sección informativa con cargos y nombres de las autoridades de la federación:</p>
+  <table>
+    <tr><th>Cargo</th><th>Nombre(s)</th></tr>
+    <tr><td>Presidente</td><td>Sebastián Sánchez Keenan</td></tr>
+    <tr><td>Vicepresidente</td><td>Anabel Didlaukis</td></tr>
+    <tr><td>Secretaria</td><td>Elena Álvarez Indart</td></tr>
+    <tr><td>Tesorero</td><td>Ignacio Ramiro Giacchino</td></tr>
+    <tr><td>Vocales titulares</td><td>Javier García Lepre · Haydee Carmen Rodríguez · Guillermo Sesarego · Jorge Barreto · Mario Eduardo Rago · Marta Gesualdo</td></tr>
+    <tr><td>Vocales suplentes</td><td>Patricia Cervi · María José Tombeur · Lucila Bausili · Virginia Bianco · Raúl Pollet</td></tr>
+    <tr><td>Revisores de cuentas titulares</td><td>Rodolfo Müller · Alberto Maratea</td></tr>
+    <tr><td>Revisores de cuentas suplentes</td><td>Lautaro Ferreira · Roberto Castro</td></tr>
+  </table>
+  <p class="nota">El diseño final y la actualización de nombres se definirán con la federación; la plataforma incluirá esta sección en el sitio público.</p>
+
+  <h3>Torneos y tabla</h3>
+  <ul>
+    <li>Listado de torneos <strong>publicados</strong>.</li>
+    <li>Fixture: cruces, jornada, fecha/hora, estado y resultado.</li>
+    <li>Filtros por división, jornada y estado.</li>
+    <li><strong>Tabla de posiciones</strong> por división: PJ, PG, PE, PP, puntos, <strong>Sh+</strong> y <strong>Sh−</strong> (shots a favor y en contra), <strong>parciales a favor</strong> y <strong>parciales en contra</strong>.</li>
+  </ul>
+
+  <h2>3. Federación (Gestión)</h2>
+  <ul>
+    <li><strong>Clubes</strong>, <strong>Jugadores</strong>, <strong>Torneos</strong>, <strong>Contenido institucional</strong>.</li>
+    <li>Torneo en borrador / publicado / finalizado.</li>
+    <li>Divisiones, equipos, plantel, capitán por equipo.</li>
+    <li>Programar y editar encuentros; cambio masivo de estado por jornada.</li>
+    <li>Publicar torneo y abrir vista pública.</li>
+  </ul>
+
+  <h2>4. Capitán</h2>
+  <ul>
+    <li><strong>Mis encuentros</strong> (solo sus equipos), con filtros.</li>
+    <li>Carga de 4 parciales: single, doble, terceto, cuarteto.</li>
+    <li>Por parcial: ganador y <strong>shots</strong> de cada equipo.</li>
+    <li>Actualiza resultado y tabla en el sitio público.</li>
+  </ul>
+
+  <h2>5. Reglas de puntaje</h2>
+  <ul>
+    <li>Parcial ganado: <strong>+2 puntos</strong> al equipo en el marcador de parciales.</li>
+    <li>Empate <strong>2 a 2</strong> en parciales → <strong>1 a 1</strong> en puntos de torneo del partido.</li>
+    <li><strong>Shots</strong> (Sh+ / Sh−) en la tabla.</li>
+    <li><strong>Parciales a favor</strong> y <strong>parciales en contra</strong> en la clasificación.</li>
+    <li>Desempates por shots o parciales netos en el orden de la tabla.</li>
+  </ul>
+
+  <h2>6. Seguridad y permisos</h2>
+  <ul>
+    <li><strong>Público:</strong> solo lectura de torneos publicados e institucional visible.</li>
+    <li><strong>Federación:</strong> gestión completa de datos operativos.</li>
+    <li><strong>Capitán:</strong> solo carga de resultados de sus equipos.</li>
+  </ul>
+
+  <p class="pie">Bowls Argentina — Federación Argentina de Bowls · Documento de funcionalidades MVP</p>
+</body>
+</html>

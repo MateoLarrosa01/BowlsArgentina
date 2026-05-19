@@ -137,7 +137,7 @@ export default async function CargarEncuentroPage({ params, searchParams }) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-stone-700">
-                    Disparos {local?.nombre}
+                    Shots {local?.nombre}
                   </label>
                   <input
                     name={`disparos_local_${tipo}`}
@@ -149,7 +149,7 @@ export default async function CargarEncuentroPage({ params, searchParams }) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-stone-700">
-                    Disparos {visitante?.nombre}
+                    Shots {visitante?.nombre}
                   </label>
                   <input
                     name={`disparos_visitante_${tipo}`}

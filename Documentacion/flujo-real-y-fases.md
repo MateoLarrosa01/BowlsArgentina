@@ -23,9 +23,11 @@ El MVP inicial validó stack, Supabase y recorridas operativas. Este documento o
 |------|-----------|------------|--------|
 | **1** | `feat/flujo-real-carga-resultados-capitán` | Capitán en equipo, RLS capitán, dominio de puntos, UI carga parciales, tabla pública básica | Hecho |
 | **2** | `feat/gestion-jugadores-y-plantel` | ABM jugadores, plantel por equipo | Hecho |
-| **3** | `feat/fase-3-gestion-y-contenido-institucional` | Rutas `/gestion`, redirects desde `/panel/admin`, contenido institucional admin + público | Hecho (misma rama) |
-| **4** | `feat/fase-3-gestion-y-contenido-institucional` | Fixture: día/hora, filtros, edición y cambio masivo de estado | Hecho (misma rama) |
+| **3** | PR #8 | Rutas `/gestion`, redirects, contenido institucional | Hecho |
+| **4** | PR #8 | Fixture: día/hora, filtros, edición y cambio masivo | Hecho |
 | **5** | `feat/estadisticas-fase-2` | Fuera del MVP contractual | Pendiente |
+
+**Validación MVP:** [`recorrida-operativa-completa.md`](recorrida-operativa-completa.md)
 
 ## Reglas de negocio (recordatorio)
 
