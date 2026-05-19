@@ -2,7 +2,7 @@
 ## Plataforma web para torneos interclubes
 
 **Documento para revisión del cliente**  
-Versión MVP · Mayo 2026
+Mayo 2026
 
 ![Federación Argentina de Bowls](logo-federacion.png)
 
@@ -32,8 +32,28 @@ Cualquier persona puede entrar al sitio **sin crear cuenta**.
 - Presentación de la plataforma y acceso rápido a torneos e inicio de sesión.
 
 ### Contenido institucional
-- **Quiénes somos** y **Contacto** (textos editables por la federación).
+- **Quiénes somos** (texto editable por la federación).
 - Enlaces en el menú principal y pie de página.
+
+### Fotos
+- **Galería simple** de imágenes de torneos y actividades.
+- La federación sube y ordena las fotos desde Gestión; el público solo las ve.
+
+### Reglamentos
+- Listado de documentos oficiales en **PDF** con botón **Descargar**:
+  - Reglamento nacional
+  - Reglamento inglés
+  - Reglamento traducido
+- Los archivos se sirven desde el sitio (carpeta pública de reglamentos).
+
+### Links (clubes asociados)
+- Listado de la **federación y clubes asociados** con nombre, dirección, teléfono y enlace a **Instagram**.
+- Escudo o logo por club.
+
+### Contacto
+- **Formulario** con nombre, apellido, correo y mensaje.
+- Datos de contacto visibles: correo `info@bowlsargentina.org` e Instagram de la federación.
+- Los mensajes quedan registrados para que la federación los consulte en Gestión.
 
 ### Autoridades
 
@@ -85,7 +105,10 @@ Acceso centralizado a:
 - **Clubes** — Alta y edición de clubes afiliados (nombre, contacto, activo/inactivo).
 - **Jugadores** — Alta de jugadores por club; filtro por club.
 - **Torneos** — Creación y administración completa del ciclo del torneo.
-- **Contenido institucional** — Edición de textos públicos (Quiénes somos, Contacto).
+- **Contenido institucional** — Edición de textos públicos (Quiénes somos).
+- **Galería de fotos** — Subida, orden y publicación de imágenes en la página Fotos.
+- **Enlaces y clubes** — Datos y redes de la federación y clubes asociados (página Links).
+- **Mensajes de contacto** — Bandeja de consultas enviadas desde el formulario público.
 
 ### Gestión de torneos interclubes
 
@@ -163,10 +186,10 @@ El MVP aplica las reglas de negocio acordadas para interclubes:
 
 ## 6. Seguridad y permisos (resumen)
 
-- **Público:** solo lectura de torneos publicados y contenido institucional visible.
-- **Federación:** puede crear y modificar clubes, jugadores, torneos, fixture y textos institucionales.
+- **Público:** lectura de torneos publicados, galería, reglamentos, enlaces y envío del formulario de contacto.
+- **Federación:** puede crear y modificar clubes, jugadores, torneos, fixture, fotos, enlaces, textos institucionales y revisar mensajes de contacto.
 - **Capitán:** solo puede cargar resultados de encuentros de **sus** equipos; no accede a la gestión federativa.
 
 ---
 
-*Bowls Argentina — Federación Argentina de Bowls · Documento de funcionalidades MVP*
+*Bowls Argentina — Federación Argentina de Bowls*

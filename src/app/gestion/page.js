@@ -20,8 +20,23 @@ const tarjetas = [
   },
   {
     titulo: "Contenido institucional",
-    descripcion: "Quiénes somos, contacto y textos del sitio público.",
+    descripcion: "Quiénes somos y textos editables del sitio público.",
     href: "/gestion/contenido",
+  },
+  {
+    titulo: "Galería de fotos",
+    descripcion: "Subir y ordenar fotos de la página pública Fotos.",
+    href: "/gestion/fotos",
+  },
+  {
+    titulo: "Enlaces y clubes",
+    descripcion: "Redes y datos de contacto de la federación y clubes asociados.",
+    href: "/gestion/enlaces",
+  },
+  {
+    titulo: "Mensajes de contacto",
+    descripcion: "Consultas recibidas desde el formulario de Contacto.",
+    href: "/gestion/contacto",
   },
 ];
 

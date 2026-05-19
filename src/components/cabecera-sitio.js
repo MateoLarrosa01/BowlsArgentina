@@ -8,19 +8,9 @@ import {
   createBrowserSupabaseClient,
   supabaseConfigurado,
 } from "@/lib/supabase/client";
-import {
-  SLUGS_INSTITUCIONALES_NAV,
-  rutaInstitucionalNav,
-} from "@/lib/contenido-institucional";
+import { MENU_PUBLICO } from "@/lib/navegacion-publica";
 
-const enlacesPublicos = [
-  { href: "/", etiqueta: "Inicio" },
-  { href: "/torneos", etiqueta: "Torneos" },
-  ...SLUGS_INSTITUCIONALES_NAV.map((p) => ({
-    href: rutaInstitucionalNav(p),
-    etiqueta: p.etiqueta,
-  })),
-];
+const enlacesPublicos = MENU_PUBLICO;
 
 function etiquetaRol(rol) {
   if (rol === "super_admin") return "Superadmin";

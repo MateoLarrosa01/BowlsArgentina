@@ -31,8 +31,9 @@ export default async function GestionContenidoPage({ searchParams }) {
           Contenido institucional
         </h1>
         <p className="mt-2 max-w-2xl text-base text-stone-600">
-          Editá textos visibles en el sitio público (por ejemplo Quiénes somos y
-          Contacto). Los párrafos se separan con una línea en blanco.
+          Editá textos visibles en el sitio público (por ejemplo Quiénes somos).
+          El formulario de contacto está en la página Contacto. Los párrafos se
+          separan con una línea en blanco.
         </p>
       </header>
 

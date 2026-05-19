@@ -1,8 +1,7 @@
 /** Slugs con enlace fijo en cabecera y pie (deben existir en paginas_institucionales). */
+/** Solo páginas editables en gestión/contenido (contacto usa /contacto con formulario). */
 export const SLUGS_INSTITUCIONALES_NAV = [
   { slug: "quienes-somos", etiqueta: "Quiénes somos" },
-  { slug: "autoridades", etiqueta: "Autoridades", href: "/institucional/autoridades" },
-  { slug: "contacto", etiqueta: "Contacto" },
 ];
 
 /** href opcional para rutas estáticas (ej. autoridades). */

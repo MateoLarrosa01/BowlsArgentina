@@ -11,8 +11,11 @@ Usá esta secuencia para mostrar el MVP al cliente. Conviene tener **dos ventana
 | Qué decir (sugerido) | Qué mostrar |
 |----------------------|-------------|
 | “Plataforma de Bowls Argentina para torneos interclubes.” | Inicio con logo en la cabecera. |
-| “Cualquiera entra sin cuenta.” | Menú: Torneos, Quiénes somos, **Autoridades**, Contacto. |
+| “Cualquiera entra sin cuenta.” | Menú: Torneos, Quiénes somos, **Fotos**, **Autoridades**, **Reglamentos**, **Links**, **Contacto**. |
 | “Autoridades de la federación, como en el sitio actual.” | **Autoridades** → listado de cargos. |
+| “Reglamentos oficiales en PDF.” | **Reglamentos** → botones Descargar. |
+| “Redes y datos de clubes asociados.” | **Links** → listado con Instagram. |
+| “Formulario de contacto a la federación.” | **Contacto** → formulario y correo institucional. |
 
 ---
 
@@ -31,10 +34,10 @@ Usá esta secuencia para mostrar el MVP al cliente. Conviene tener **dos ventana
 | Qué decir | Qué mostrar |
 |-----------|-------------|
 | “La federación ingresa con su usuario.” | **Iniciar sesión** → admin. |
-| “Área de gestión centralizada.” | **Gestión** → tarjetas Clubes, Jugadores, Torneos, Contenido. |
+| “Área de gestión centralizada.” | **Gestión** → Clubes, Jugadores, Torneos, Contenido, Fotos, Enlaces, Mensajes de contacto. |
 | “Armo el torneo: divisiones, equipos, capitán.” | Entrar al torneo → división, equipo (correo capitán), **programar encuentro**. |
 | “Publico y queda visible al público.” | Estado **publicado**; enlace vista pública. |
-| “Edito textos institucionales.” | **Contenido institucional** (opcional, 20 s). |
+| “Edito textos, fotos y enlaces.” | **Contenido institucional** / **Galería de fotos** / **Enlaces** (opcional, 30 s). |
 
 ---
 

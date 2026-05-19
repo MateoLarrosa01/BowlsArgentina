@@ -1,8 +1,5 @@
 import Link from "next/link";
-import {
-  SLUGS_INSTITUCIONALES_NAV,
-  rutaInstitucionalNav,
-} from "@/lib/contenido-institucional";
+import { MENU_PUBLICO } from "@/lib/navegacion-publica";
 
 export function PieSitio() {
   const anio = new Date().getFullYear();
@@ -13,13 +10,13 @@ export function PieSitio() {
           © {anio} Bowls Argentina · Plataforma para la federación y los clubes.
         </p>
         <nav className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {SLUGS_INSTITUCIONALES_NAV.map((p) => (
+          {MENU_PUBLICO.filter((e) => e.href !== "/").map((e) => (
             <Link
-              key={p.slug}
-              href={rutaInstitucionalNav(p)}
+              key={e.href}
+              href={e.href}
               className="font-medium text-emerald-800 underline-offset-4 hover:underline"
             >
-              {p.etiqueta}
+              {e.etiqueta}
             </Link>
           ))}
           <Link
