@@ -16,7 +16,7 @@ export async function crearJugador(formData) {
   const fechaRaw = formData.get("fecha_nacimiento")?.toString().trim();
 
   if (!nombre || !apellido || !idClub) {
-    conMensaje("/panel/admin/jugadores", "Nombre, apellido y club son obligatorios.");
+    conMensaje("/gestion/jugadores", "Nombre, apellido y club son obligatorios.");
   }
 
   const { error } = await supabase.from("jugadores").insert({
@@ -28,11 +28,11 @@ export async function crearJugador(formData) {
   });
 
   if (error) {
-    conMensaje("/panel/admin/jugadores", error.message);
+    conMensaje("/gestion/jugadores", error.message);
   }
 
-  revalidatePath("/panel/admin/jugadores");
-  redirect("/panel/admin/jugadores?ok=1");
+  revalidatePath("/gestion/jugadores");
+  redirect("/gestion/jugadores?ok=1");
 }
 
 export async function actualizarJugador(formData) {
@@ -45,7 +45,7 @@ export async function actualizarJugador(formData) {
   const activo = ["on", "true"].includes(formData.get("activo"));
 
   if (!id || !nombre || !apellido || !idClub) {
-    conMensaje("/panel/admin/jugadores", "Datos incompletos para actualizar el jugador.");
+    conMensaje("/gestion/jugadores", "Datos incompletos para actualizar el jugador.");
   }
 
   const { error } = await supabase
@@ -60,9 +60,9 @@ export async function actualizarJugador(formData) {
     .eq("id", id);
 
   if (error) {
-    conMensaje("/panel/admin/jugadores", error.message);
+    conMensaje("/gestion/jugadores", error.message);
   }
 
-  revalidatePath("/panel/admin/jugadores");
-  redirect("/panel/admin/jugadores?ok=1");
+  revalidatePath("/gestion/jugadores");
+  redirect("/gestion/jugadores?ok=1");
 }

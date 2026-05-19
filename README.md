@@ -40,8 +40,8 @@ Resumen rápido:
 
    Vas a ver la cabecera, el inicio (público y gestión), el listado de **torneos publicados** (vacío hasta tener datos en Supabase), **inicio de sesión / registro** y un **panel** mínimo para usuarios con sesión.
 
-5. **Demo para mostrar al cliente (MVP)**  
-   Con un usuario **admin_fab** o **super_admin** en `perfiles`: entrá a **Administración** (`/panel/admin`), cargá **clubes**, creá un **torneo** en borrador, agregá **divisiones**, **equipos** y **encuentros**, cambiá el estado del torneo a **publicado** y abrí la **vista pública** desde el enlace del torneo o desde **Torneos** en el menú principal (sin cuenta).
+5. **Recorrida operativa (MVP)**  
+   Con un usuario **admin_fab** o **super_admin** en `perfiles`: entrá a **Gestión** (`/gestion`), cargá **clubes**, creá un **torneo** en borrador, agregá **divisiones**, **equipos** y **encuentros**, cambiá el estado del torneo a **publicado** y abrí la **vista pública** desde el enlace del torneo o desde **Torneos** en el menú principal (sin cuenta). Editá **Quiénes somos** y **Contacto** en `/gestion/contenido` (requiere migración `20260518120000_paginas_institucionales.sql` si el proyecto ya existía antes de la fase 3).
 
 ## Base de datos (Supabase / PostgreSQL)
 

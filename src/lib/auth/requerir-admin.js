@@ -18,7 +18,7 @@ export async function requerirAdministrador() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    redirect("/iniciar-sesion?siguiente=/panel/admin");
+    redirect("/iniciar-sesion?siguiente=/gestion");
   }
 
   const { data: perfil } = await supabase

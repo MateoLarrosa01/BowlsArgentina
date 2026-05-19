@@ -7,11 +7,11 @@ export default function AdminTorneoNuevoPage() {
   return (
     <ContenedorPagina className="max-w-lg">
       <nav className="text-sm text-stone-500">
-        <Link href="/panel/admin" className="font-medium text-emerald-800 hover:underline">
-          Administración
+        <Link href="/gestion" className="font-medium text-emerald-800 hover:underline">
+          Gestión
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/panel/admin/torneos" className="font-medium text-emerald-800 hover:underline">
+        <Link href="/gestion/torneos" className="font-medium text-emerald-800 hover:underline">
           Torneos
         </Link>
         <span className="mx-2">/</span>

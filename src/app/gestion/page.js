@@ -6,21 +6,26 @@ const tarjetas = [
   {
     titulo: "Clubes",
     descripcion: "Alta y edición de clubes afiliados.",
-    href: "/panel/admin/clubes",
+    href: "/gestion/clubes",
   },
   {
     titulo: "Jugadores",
     descripcion: "Alta de jugadores por club para armar planteles.",
-    href: "/panel/admin/jugadores",
+    href: "/gestion/jugadores",
   },
   {
     titulo: "Torneos",
     descripcion: "Torneos, divisiones, equipos, plantel y fixture.",
-    href: "/panel/admin/torneos",
+    href: "/gestion/torneos",
+  },
+  {
+    titulo: "Contenido institucional",
+    descripcion: "Quiénes somos, contacto y textos del sitio público.",
+    href: "/gestion/contenido",
   },
 ];
 
-export default async function PanelAdminInicioPage() {
+export default async function GestionInicioPage() {
   const supabase = await createServerSupabaseClient();
   const { count: nClubes } = await supabase
     .from("clubes")
@@ -39,12 +44,12 @@ export default async function PanelAdminInicioPage() {
           Mi panel
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-stone-800">Administración</span>
+        <span className="text-stone-800">Gestión</span>
       </nav>
 
       <header className="mt-4 border-b border-stone-200 pb-6">
         <h1 className="text-2xl font-bold text-stone-900 sm:text-3xl">
-          Administración
+          Gestión
         </h1>
         <p className="mt-2 max-w-2xl text-base text-stone-600">
           Herramientas de la federación: cargá clubes,

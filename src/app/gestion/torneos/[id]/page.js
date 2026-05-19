@@ -3,8 +3,16 @@ import { notFound } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
 import { PlantelEquipo } from "@/components/plantel-equipo";
+import { FiltrosFixture } from "@/components/filtros-fixture";
+import { GestionEncuentroFila } from "@/components/gestion-encuentro-fila";
+import {
+  filtrarEncuentros,
+  leerFiltrosFixture,
+  numerosFechaDisponibles,
+} from "@/lib/dominio/fixture";
 import {
   actualizarTorneo,
+  cambiarEstadoEncuentrosMasivo,
   crearDivision,
   crearEncuentro,
   crearEquipo,
@@ -58,10 +66,15 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
   const { data: encuentros } = await supabase
     .from("encuentros")
     .select(
-      "id, numero_fecha, fecha_hora, estado, id_division, id_equipo_local, id_equipo_visitante",
+      "id, numero_fecha, fecha_hora, estado, id_division, id_equipo_local, id_equipo_visitante, puntos_encuentro_local, puntos_encuentro_visitante",
     )
     .eq("id_torneo", id)
-    .order("numero_fecha", { ascending: true });
+    .order("numero_fecha", { ascending: true })
+    .order("fecha_hora", { ascending: true, nullsFirst: false });
+
+  const filtros = leerFiltrosFixture(sp);
+  const encuentrosFiltrados = filtrarEncuentros(encuentros, filtros);
+  const fechasJornada = numerosFechaDisponibles(encuentros);
 
   const mapaEquipoNombre = Object.fromEntries(
     equipos.map((e) => [e.id, e.nombre]),
@@ -97,11 +110,11 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
   return (
     <ContenedorPagina>
       <nav className="text-sm text-stone-500">
-        <Link href="/panel/admin" className="font-medium text-emerald-800 hover:underline">
-          Administración
+        <Link href="/gestion" className="font-medium text-emerald-800 hover:underline">
+          Gestión
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/panel/admin/torneos" className="font-medium text-emerald-800 hover:underline">
+        <Link href="/gestion/torneos" className="font-medium text-emerald-800 hover:underline">
           Torneos
         </Link>
         <span className="mx-2">/</span>
@@ -363,7 +376,7 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
                   ))}
                 </select>
               </div>
-              <div className="sm:col-span-2">
+              <div>
                 <label className="block text-xs font-medium text-stone-600">
                   Número de fecha (opcional)
                 </label>
@@ -372,7 +385,17 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
                   type="number"
                   min={1}
                   placeholder="Ej. 1"
-                  className="mt-1 w-full max-w-xs min-h-[44px] rounded-lg border border-stone-300 px-3 text-base"
+                  className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 px-3 text-base"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-600">
+                  Día y hora (opcional)
+                </label>
+                <input
+                  name="fecha_hora"
+                  type="datetime-local"
+                  className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 px-3 text-base"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -388,30 +411,120 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
         );
       })}
 
-      <section className="mt-10">
-        <h2 className="text-lg font-semibold text-stone-900">Encuentros programados</h2>
+      <section className="mt-10" id="fixture">
+        <h2 className="text-lg font-semibold text-stone-900">Fixture del torneo</h2>
+        <p className="mt-2 max-w-2xl text-sm text-stone-600">
+          Filtrá, editá jornada, día/hora y estado de cada encuentro. Podés cancelar o
+          reprogramar una jornada completa con el cambio masivo.
+        </p>
+
+        <FiltrosFixture
+          basePath={`/gestion/torneos/${id}#fixture`}
+          divisiones={divisiones ?? []}
+          fechas={fechasJornada}
+          valores={filtros}
+        />
+
         {!encuentros?.length && (
-          <p className="mt-2 text-sm text-stone-600">Todavía no hay encuentros.</p>
+          <p className="mt-4 text-sm text-stone-600">Todavía no hay encuentros.</p>
         )}
-        <ul className="mt-4 space-y-2">
-          {(encuentros ?? []).map((en) => {
-            const divNombre =
-              divisiones?.find((d) => d.id === en.id_division)?.nombre ?? "—";
-            return (
-              <li
-                key={en.id}
-                className="rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-800"
-              >
-                <span className="font-medium text-stone-500">{divNombre}</span>
-                {" · "}
-                Fecha {en.numero_fecha ?? "—"} ·{" "}
-                <strong>{mapaEquipoNombre[en.id_equipo_local] ?? "?"}</strong> vs{" "}
-                <strong>{mapaEquipoNombre[en.id_equipo_visitante] ?? "?"}</strong>
-                <span className="ml-2 capitalize text-stone-500">({en.estado})</span>
-              </li>
-            );
-          })}
+        {encuentros?.length > 0 && encuentrosFiltrados.length === 0 && (
+          <p className="mt-4 text-sm text-amber-800">
+            Ningún encuentro coincide con los filtros.
+          </p>
+        )}
+
+        <ul className="mt-6 space-y-4">
+          {encuentrosFiltrados.map((en) => (
+            <GestionEncuentroFila
+              key={en.id}
+              encuentro={en}
+              idTorneo={id}
+              nombreLocal={mapaEquipoNombre[en.id_equipo_local] ?? "?"}
+              nombreVisitante={mapaEquipoNombre[en.id_equipo_visitante] ?? "?"}
+              nombreDivision={
+                divisiones?.find((d) => d.id === en.id_division)?.nombre ?? "—"
+              }
+            />
+          ))}
         </ul>
+
+        {fechasJornada.length > 0 && (
+          <div className="mt-10 rounded-2xl border border-amber-200 bg-amber-50 p-6">
+            <h3 className="text-base font-semibold text-amber-950">
+              Cambio masivo de estado
+            </h3>
+            <p className="mt-1 text-sm text-amber-900">
+              Aplica a todos los encuentros de una jornada (opcionalmente solo una
+              división). Solo programado o cancelado.
+            </p>
+            <form
+              action={cambiarEstadoEncuentrosMasivo}
+              className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+            >
+              <input type="hidden" name="id_torneo" value={id} />
+              <div>
+                <label className="block text-xs font-medium text-stone-700">
+                  Jornada
+                </label>
+                <select
+                  name="numero_fecha"
+                  required
+                  className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 bg-white px-2 text-base"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Elegir…
+                  </option>
+                  {fechasJornada.map((n) => (
+                    <option key={n} value={n}>
+                      Fecha {n}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-700">
+                  División (opcional)
+                </label>
+                <select
+                  name="id_division"
+                  className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 bg-white px-2 text-base"
+                  defaultValue=""
+                >
+                  <option value="">Todas las divisiones</option>
+                  {(divisiones ?? []).map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-700">
+                  Nuevo estado
+                </label>
+                <select
+                  name="estado"
+                  required
+                  className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 bg-white px-2 text-base"
+                  defaultValue="cancelado"
+                >
+                  <option value="programado">Programado</option>
+                  <option value="cancelado">Cancelado</option>
+                </select>
+              </div>
+              <div className="flex items-end sm:col-span-2 lg:col-span-1">
+                <button
+                  type="submit"
+                  className="w-full min-h-[44px] rounded-lg bg-amber-800 px-4 text-sm font-semibold text-white hover:bg-amber-700"
+                >
+                  Aplicar a la jornada
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </section>
     </ContenedorPagina>
   );

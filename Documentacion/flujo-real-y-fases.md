@@ -1,13 +1,13 @@
-# Flujo real del producto (post-demo MVP)
+# Flujo real del producto
 
-El demo mergeado en `main` sirvió para validar stack, Supabase y una recorrida visual. **No es el flujo definitivo de operación.** Este documento ordena cómo queda el sistema real, alineado al análisis funcional.
+El MVP inicial validó stack, Supabase y recorridas operativas. Este documento ordena el sistema en producción, alineado al análisis funcional.
 
 ## Dos caras de la misma app
 
 | Audiencia | Acceso | Qué hace |
 |-----------|--------|----------|
 | **Público** | Sin cuenta | Inicio institucional, listado de torneos **publicados**, fixture, resultados y tabla por división |
-| **Federación** (`admin_fab`, `super_admin`) | Login | ABM clubes, jugadores, torneos, divisiones, equipos, fixture; asignar capitanes; publicar torneos |
+| **Federación** (`admin_fab`, `super_admin`) | Login | ABM clubes, jugadores, torneos, divisiones, equipos, fixture; contenido institucional; asignar capitanes; publicar torneos |
 | **Capitán** (`capitan`) | Login | Cargar parciales y cerrar encuentros **solo de sus equipos** (mobile first) |
 
 ## Flujo operativo interclubes (real)
@@ -17,15 +17,15 @@ El demo mergeado en `main` sirvió para validar stack, Supabase y una recorrida 
 3. Capitán entra a **Mis encuentros**, carga los 4 parciales (single, doble, terceto, cuarteto) con ganador y disparos.
 4. El sistema calcula puntos del encuentro (regla 2–2 en parciales = 1–1 en tabla de partido), actualiza **clasificación** y el público ve resultados.
 
-## Fases de implementación (ramas sugeridas)
+## Fases de implementación
 
-| Fase | Rama / PR | Entregable |
-|------|-----------|------------|
-| **1** (actual) | `feat/flujo-real-carga-resultados-capitán` | Capitán en equipo, RLS capitán, dominio de puntos, UI carga parciales, tabla pública básica |
-| **2** | `feat/gestion-jugadores-y-plantel` | ABM jugadores, plantel por equipo *(en curso)* |
-| **3** | `feat/gestion-federacion-refactor` | Renombrar copy “demo”, rutas `/gestion`, contenido institucional admin |
-| **4** | `feat/fixture-avanzado` | Fechas, filtros, estados masivos |
-| **5** | `feat/estadisticas-fase-2` | Fuera del MVP contractual |
+| Fase | Rama / PR | Entregable | Estado |
+|------|-----------|------------|--------|
+| **1** | `feat/flujo-real-carga-resultados-capitán` | Capitán en equipo, RLS capitán, dominio de puntos, UI carga parciales, tabla pública básica | Hecho |
+| **2** | `feat/gestion-jugadores-y-plantel` | ABM jugadores, plantel por equipo | Hecho |
+| **3** | `feat/fase-3-gestion-y-contenido-institucional` | Rutas `/gestion`, redirects desde `/panel/admin`, contenido institucional admin + público | Hecho (misma rama) |
+| **4** | `feat/fase-3-gestion-y-contenido-institucional` | Fixture: día/hora, filtros, edición y cambio masivo de estado | Hecho (misma rama) |
+| **5** | `feat/estadisticas-fase-2` | Fuera del MVP contractual | Pendiente |
 
 ## Reglas de negocio (recordatorio)
 
@@ -33,8 +33,12 @@ El demo mergeado en `main` sirvió para validar stack, Supabase y una recorrida 
 - **2–2 en parciales** → puntos de partido **1–1** (no 4–4).
 - Desempates finos (shots, parciales netos) → orden en **tabla**, no en el 1–1 del partido.
 
-## Qué queda del demo sin tocar aún
+## Rutas principales
 
-- Textos “demo MVP” en panel (se limpian en fase 3).
-- ABM de jugadores y plantel en gestión de torneo (fase 2).
-- Sin CMS institucional completo.
+| Ruta | Uso |
+|------|-----|
+| `/gestion` | Hub federación (antes `/panel/admin`) |
+| `/gestion/contenido` | Editar páginas institucionales |
+| `/institucional/[slug]` | Quiénes somos, contacto (público) |
+| `/panel/mis-encuentros` | Carga de resultados (capitán) |
+| `/torneos/[id]#fixture` | Fixture público con filtros por división, jornada y estado |

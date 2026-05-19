@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FiltrosFixture } from "@/components/filtros-fixture";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
+import {
+  etiquetaEstadoEncuentro,
+  filtrarEncuentros,
+  formatoFechaHoraLegible,
+  leerFiltrosFixture,
+  numerosFechaDisponibles,
+} from "@/lib/dominio/fixture";
 import { createServerSupabaseClientOpcional } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }) {
@@ -21,9 +29,10 @@ export async function generateMetadata({ params }) {
   return { title: data.nombre };
 }
 
-export default async function TorneoDetallePage({ params }) {
+export default async function TorneoDetallePage({ params, searchParams }) {
   const supabase = await createServerSupabaseClientOpcional();
   const { id } = await params;
+  const sp = await searchParams;
 
   if (!supabase) {
     return (
@@ -73,7 +82,12 @@ export default async function TorneoDetallePage({ params }) {
       "id, numero_fecha, fecha_hora, estado, id_division, id_equipo_local, id_equipo_visitante, puntos_encuentro_local, puntos_encuentro_visitante",
     )
     .eq("id_torneo", id)
-    .order("numero_fecha", { ascending: true });
+    .order("numero_fecha", { ascending: true })
+    .order("fecha_hora", { ascending: true });
+
+  const filtros = leerFiltrosFixture(sp);
+  const encuentrosVisibles = filtrarEncuentros(encuentros, filtros);
+  const fechasJornada = numerosFechaDisponibles(encuentros);
 
   const { data: clasificacion } = await supabase
     .from("clasificacion_equipos")
@@ -165,17 +179,31 @@ export default async function TorneoDetallePage({ params }) {
         </ul>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-10" id="fixture">
         <h2 className="text-lg font-semibold text-stone-900">Fixture</h2>
+        {(encuentros ?? []).length > 0 && (
+          <FiltrosFixture
+            basePath={`/torneos/${id}#fixture`}
+            divisiones={divisiones ?? []}
+            fechas={fechasJornada}
+            valores={filtros}
+          />
+        )}
         {!encuentros?.length && (
           <p className="mt-3 text-base text-stone-600">
             Los encuentros aparecerán aquí cuando la federación los programe.
           </p>
         )}
+        {encuentros?.length > 0 && encuentrosVisibles.length === 0 && (
+          <p className="mt-3 text-base text-amber-800">
+            Ningún encuentro coincide con los filtros.
+          </p>
+        )}
         <ul className="mt-4 space-y-3">
-          {(encuentros ?? []).map((en) => {
+          {encuentrosVisibles.map((en) => {
             const divNombre =
               divisiones?.find((d) => d.id === en.id_division)?.nombre ?? "—";
+            const cuando = formatoFechaHoraLegible(en.fecha_hora);
             return (
               <li
                 key={en.id}
@@ -184,6 +212,7 @@ export default async function TorneoDetallePage({ params }) {
                 <div>
                   <span className="text-sm font-medium text-stone-500">
                     {divNombre} · Fecha {en.numero_fecha ?? "—"}
+                    {cuando ? ` · ${cuando}` : ""}
                   </span>
                   <p className="mt-1 font-semibold text-stone-900">
                     {mapaNombre[en.id_equipo_local] ?? "—"} vs{" "}
@@ -193,7 +222,7 @@ export default async function TorneoDetallePage({ params }) {
                 <span className="text-sm text-emerald-800">
                   {en.estado === "jugado"
                     ? `${en.puntos_encuentro_local ?? 0} – ${en.puntos_encuentro_visitante ?? 0}`
-                    : en.estado}
+                    : etiquetaEstadoEncuentro(en.estado)}
                 </span>
               </li>
             );
