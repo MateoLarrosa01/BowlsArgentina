@@ -36,7 +36,7 @@ export default async function GestionEnlacesPage({ searchParams }) {
           <Link href="/links" className="font-medium text-emerald-800 hover:underline" target="_blank">
             Links
           </Link>
-          . Los escudos se cargan por URL cuando los tengas listos.
+          . Podés cargar el escudo de cada club en el campo Logo (URL).
         </p>
       </header>
 
