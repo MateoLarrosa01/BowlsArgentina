@@ -1,19 +1,33 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
+import { AlertasFlash } from "@/components/gestion/alertas-flash";
+import {
+  BotonCancelarEdicion,
+  BotonEditar,
+  FilaEdicion,
+  TablaGestion,
+  Td,
+  Th,
+} from "@/components/gestion/tabla-gestion";
 import { urlPublicaGaleria } from "@/lib/galeria-fotos";
+import { idEnEdicion, urlCancelarEdicion, urlEditar } from "@/lib/gestion/url-edicion";
 import {
   actualizarFotoGaleria,
   eliminarFotoGaleria,
   subirFotoGaleria,
 } from "./actions";
 
+const RUTA = "/gestion/fotos";
+
 export default async function GestionFotosPage({ searchParams }) {
   const supabase = await createServerSupabaseClient();
   const sp = await searchParams;
   const mensaje = sp.mensaje ? String(sp.mensaje) : null;
   const ok = sp.ok === "1";
+  const editarId = idEnEdicion(sp);
 
   const { data: fotos, error } = await supabase
     .from("fotos_galeria")
@@ -42,16 +56,7 @@ export default async function GestionFotosPage({ searchParams }) {
         </p>
       </header>
 
-      {mensaje && (
-        <p className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
-          {mensaje}
-        </p>
-      )}
-      {ok && (
-        <p className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
-          Cambios guardados.
-        </p>
-      )}
+      <AlertasFlash mensaje={mensaje} ok={ok} okTexto="Cambios guardados." />
       {error && <p className="mt-6 text-sm text-red-700">{error.message}</p>}
 
       <section className="mt-10 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
@@ -71,11 +76,11 @@ export default async function GestionFotosPage({ searchParams }) {
             />
           </div>
           <div>
-            <label htmlFor="titulo" className="block text-sm font-medium text-stone-700">
+            <label htmlFor="titulo-nueva" className="block text-sm font-medium text-stone-700">
               Título (opcional)
             </label>
             <input
-              id="titulo"
+              id="titulo-nueva"
               name="titulo"
               className="mt-1 w-full min-h-[44px] rounded-lg border border-stone-300 px-3"
             />
@@ -101,68 +106,104 @@ export default async function GestionFotosPage({ searchParams }) {
         </form>
       </section>
 
-      <ul className="mt-10 space-y-6">
-        {(fotos ?? []).map((f) => {
-          const url = urlPublicaGaleria(supabase, f.ruta_storage);
-          return (
-            <li
-              key={f.id}
-              className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm"
-            >
-              <div className="flex flex-col gap-4 sm:flex-row">
-                {url && (
-                  <div className="relative h-32 w-48 shrink-0 overflow-hidden rounded-lg bg-stone-100">
-                    <Image src={url} alt="" fill className="object-cover" sizes="192px" />
-                  </div>
-                )}
-                <form action={actualizarFotoGaleria} className="flex flex-1 flex-col gap-3">
-                  <input type="hidden" name="id" value={f.id} />
-                  <div>
-                    <label className="text-sm font-medium text-stone-700">Título</label>
-                    <input
-                      name="titulo"
-                      defaultValue={f.titulo ?? ""}
-                      className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2"
-                    />
-                  </div>
-                  <div className="flex flex-wrap gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-stone-700">Orden</label>
-                      <input
-                        name="orden"
-                        type="number"
-                        defaultValue={f.orden}
-                        className="mt-1 w-24 rounded-lg border border-stone-300 px-3 py-2"
-                      />
-                    </div>
-                    <label className="flex items-center gap-2 pt-6 text-sm">
-                      <input name="publicada" type="checkbox" defaultChecked={f.publicada} />
-                      Visible en el sitio
-                    </label>
-                  </div>
-                  <button
-                    type="submit"
-                    className="self-start rounded-lg bg-stone-800 px-4 py-2 text-sm font-semibold text-white hover:bg-stone-700"
-                  >
-                    Guardar
-                  </button>
-                </form>
-                <form action={eliminarFotoGaleria}>
-                  <input type="hidden" name="id" value={f.id} />
-                  <button
-                    type="submit"
-                    className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-800 hover:bg-red-50"
-                  >
-                    Eliminar
-                  </button>
-                </form>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold text-stone-900">Listado</h2>
+        <TablaGestion vacio={!fotos?.length && !error ? "No hay fotos en la galería." : null}>
+          <thead>
+            <tr>
+              <Th>Vista</Th>
+              <Th>Título</Th>
+              <Th>Orden</Th>
+              <Th>Estado</Th>
+              <Th className="text-right">Acciones</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {(fotos ?? []).map((f) => {
+              const url = urlPublicaGaleria(supabase, f.ruta_storage);
+              return (
+                <Fragment key={f.id}>
+                  <tr className={editarId === f.id ? "bg-emerald-50/40" : undefined}>
+                    <Td>
+                      {url ? (
+                        <div className="relative h-14 w-20 overflow-hidden rounded-md bg-stone-100">
+                          <Image src={url} alt="" fill className="object-cover" sizes="80px" />
+                        </div>
+                      ) : (
+                        "—"
+                      )}
+                    </Td>
+                    <Td>{f.titulo || "Sin título"}</Td>
+                    <Td>{f.orden}</Td>
+                    <Td>
+                      <span
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                          f.publicada
+                            ? "bg-emerald-100 text-emerald-900"
+                            : "bg-stone-200 text-stone-600"
+                        }`}
+                      >
+                        {f.publicada ? "Publicada" : "Oculta"}
+                      </span>
+                    </Td>
+                    <Td className="text-right">
+                      {editarId !== f.id && <BotonEditar href={urlEditar(RUTA, f.id)} />}
+                    </Td>
+                  </tr>
+                  {editarId === f.id && (
+                    <FilaEdicion colSpan={5}>
+                      <form action={actualizarFotoGaleria} className="grid gap-4 sm:max-w-lg">
+                        <input type="hidden" name="id" value={f.id} />
+                        <div>
+                          <label className="text-sm font-medium text-stone-700">Título</label>
+                          <input
+                            name="titulo"
+                            defaultValue={f.titulo ?? ""}
+                            className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2"
+                          />
+                        </div>
+                        <div className="flex flex-wrap items-end gap-4">
+                          <div>
+                            <label className="text-sm font-medium text-stone-700">Orden</label>
+                            <input
+                              name="orden"
+                              type="number"
+                              defaultValue={f.orden}
+                              className="mt-1 w-24 rounded-lg border border-stone-300 px-3 py-2"
+                            />
+                          </div>
+                          <label className="flex items-center gap-2 pb-2 text-sm">
+                            <input name="publicada" type="checkbox" defaultChecked={f.publicada} />
+                            Visible en el sitio
+                          </label>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="submit"
+                            className="rounded-lg bg-stone-800 px-4 py-2 text-sm font-semibold text-white hover:bg-stone-700"
+                          >
+                            Guardar
+                          </button>
+                          <BotonCancelarEdicion href={urlCancelarEdicion(sp, RUTA)} />
+                        </div>
+                      </form>
+                      <form action={eliminarFotoGaleria} className="mt-4 border-t border-stone-200 pt-4">
+                        <input type="hidden" name="id" value={f.id} />
+                        <button
+                          type="submit"
+                          className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-800 hover:bg-red-50"
+                        >
+                          Eliminar foto
+                        </button>
+                      </form>
+                    </FilaEdicion>
+                  )}
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </TablaGestion>
+      </section>
     </ContenedorPagina>
   );
 }
-
-

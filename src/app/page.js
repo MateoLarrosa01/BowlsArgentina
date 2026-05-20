@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
+import { MENU_PUBLICO } from "@/lib/navegacion-publica";
+
+const enlacesInstitucionales = MENU_PUBLICO.filter(
+  (e) => !["/", "/torneos"].includes(e.href)
+);
 
 export default function Home() {
   return (
@@ -12,9 +17,9 @@ export default function Home() {
           La competencia en un solo lugar
         </h1>
         <p className="mx-auto max-w-2xl text-lg leading-relaxed text-stone-600 sm:mx-0">
-          Consultá torneos publicados, fixture y tablas sin crear cuenta. Quienes
-          gestionan la federación o los clubes acceden con sesión para cargar
-          datos y administrar la competencia.
+          Consultá torneos publicados, fixture y tablas sin crear cuenta. También
+          encontrá información de la federación, reglamentos, fotos y contacto con
+          los clubes asociados.
         </p>
         <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
           <Link
@@ -31,6 +36,21 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <nav
+        className="mt-10 flex flex-wrap justify-center gap-2 sm:justify-start"
+        aria-label="Secciones del sitio"
+      >
+        {enlacesInstitucionales.map((e) => (
+          <Link
+            key={e.href}
+            href={e.href}
+            className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-emerald-900 shadow-sm hover:border-emerald-400"
+          >
+            {e.etiqueta}
+          </Link>
+        ))}
+      </nav>
 
       <aside className="mt-10 rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 text-left text-sm leading-relaxed text-sky-950 shadow-sm">
         <strong className="text-sky-950">¿Todavía sin base de datos?</strong> Creá un
@@ -63,17 +83,17 @@ export default function Home() {
           {
             titulo: "Público sin cuenta",
             texto:
-              "Navegación clara para seguir fechas, resultados y posiciones en el celular.",
+              "Torneos, fixture, tabla, fotos, reglamentos, links y formulario de contacto.",
           },
           {
             titulo: "Gestión centralizada",
             texto:
-              "Clubes, equipos y encuentros con reglas alineadas al modelo interclubes.",
+              "Clubes, jugadores, torneos, fixture, galería y enlaces de clubes desde un solo panel.",
           },
           {
-            titulo: "Institucional y clubes",
+            titulo: "Capitán en el celular",
             texto:
-              "Quiénes somos y contacto editables por la federación; capitán carga parciales desde el celular.",
+              "Carga de parciales y shots en Mis encuentros; resultados visibles al instante en el sitio público.",
           },
         ].map((bloque) => (
           <article

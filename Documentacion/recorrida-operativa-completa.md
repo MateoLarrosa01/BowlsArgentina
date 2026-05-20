@@ -18,8 +18,9 @@ Si el proyecto **ya existía** antes del merge de fases 3–4, confirmá en el S
 | 2 | `supabase/migrations/20260516100000_capitan_en_equipo_y_rls_carga.sql` |
 | 3 | `supabase/migrations/20260518120000_paginas_institucionales.sql` |
 | 4 | `supabase/migrations/20260518200000_encuentro_unico_por_jornada.sql` |
+| 5 | `supabase/migrations/20260519120000_sitio_fotos_enlaces_contacto.sql` |
 
-Proyecto **nuevo**: alcanza con `bootstrap-inicial.sql` (incluye todo lo anterior).
+Proyecto **nuevo**: alcanza con `bootstrap-inicial.sql` (incluye todo lo anterior, incluida la fila 5).
 
 ---
 
@@ -42,7 +43,23 @@ El capitán queda con rol `capitan` por defecto al registrarse.
 
 ---
 
-## 2. Federación — armar el torneo
+## 2. Público — sitio institucional (≈5 min, sin login)
+
+En ventana incógnito, recorré:
+
+| Página | Qué validar |
+|--------|-------------|
+| `/fotos` | Galería vacía o con fotos si el admin subió alguna |
+| `/reglamentos` | Tres PDF con botón Descargar |
+| `/links` | Listado de federación y clubes |
+| `/contacto` | Formulario + correo/Instagram; enviar mensaje de prueba |
+| `/institucional/autoridades` | Nómina visible |
+
+Luego como **admin**: **Gestión → Galería de fotos** (subir una imagen), **Enlaces** (editar un club), **Mensajes de contacto** (ver el mensaje de prueba y marcar leído).
+
+---
+
+## 3. Federación — armar el torneo
 
 Iniciá sesión como **admin**. Andá a **Gestión** (`/gestion`).
 
@@ -105,7 +122,7 @@ Guardá. **Intentá crear el mismo cruce otra vez** → debe fallar con mensaje 
 
 ---
 
-## 3. Capitán — cargar resultados
+## 4. Capitán — cargar resultados
 
 1. **Salir** de la sesión admin.
 2. **Iniciar sesión** con el correo del capitán asignado a San Martín A.
@@ -125,7 +142,7 @@ Resultado esperado en parciales: **2–2** → puntos de partido **1–1** (no 4
 
 ---
 
-## 4. Público — ver resultados
+## 5. Público — ver resultados
 
 Sin sesión (o en otra ventana):
 
@@ -137,7 +154,7 @@ Filtros del fixture: probá filtrar por **Jornada 1** y por estado **Jugado**.
 
 ---
 
-## 5. Federación — cierre de jornada (opcional)
+## 6. Federación — cierre de jornada (opcional)
 
 Volvé como admin → **Gestión → Torneo → Fixture del torneo**:
 
@@ -146,7 +163,7 @@ Volvé como admin → **Gestión → Torneo → Fixture del torneo**:
 
 ---
 
-## 6. Criterios de “app lista” (MVP)
+## 7. Criterios de “app lista” (MVP)
 
 Marcá cuando cada ítem pase:
 
@@ -157,11 +174,13 @@ Marcá cuando cada ítem pase:
 - [ ] Capitán solo ve y carga **sus** encuentros.
 - [ ] Regla 2–2 en parciales → **1–1** en fixture y coherente en tabla.
 - [ ] Filtros de fixture funcionan (público y gestión).
-- [ ] Páginas institucionales editables y visibles.
+- [ ] Páginas institucionales editables y visibles (Quiénes somos).
+- [ ] Fotos, reglamentos, links y contacto públicos operativos.
+- [ ] Formulario de contacto guarda mensajes; admin los ve en Gestión.
 
 ---
 
-## 7. Consultas SQL útiles (Supabase)
+## 8. Consultas SQL útiles (Supabase)
 
 Duplicados en encuentros:
 
@@ -183,7 +202,7 @@ order by c.puntos desc;
 
 ---
 
-## 8. Después de esta recorrida
+## 9. Después de esta recorrida
 
 Con el MVP validado, los siguientes temas son **mejoras puntuales** (no bloquean operación):
 
