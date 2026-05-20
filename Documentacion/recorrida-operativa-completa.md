@@ -24,14 +24,16 @@ Proyecto **nuevo**: alcanza con `bootstrap-inicial.sql` (incluye todo lo anterio
 
 ---
 
-## 1. Usuarios de prueba (dos cuentas)
+## 1. Usuarios de prueba
 
 | Rol | Cómo obtenerlo | Correo ejemplo |
 |-----|----------------|----------------|
-| **Federación** (`admin_fab`) | Registro + SQL `update perfiles set rol = 'admin_fab'` | tu correo principal |
-| **Capitán** (`capitan`) | Segundo registro (otro correo o navegador incógnito) | `capitan.prueba@ejemplo.com` |
+| **Federación** (`admin_fab`) | Primer usuario en Auth + SQL `admin_fab` (ver abajo) | tu correo principal |
+| **Capitán** (`capitan`) | **Gestión → Capitanes** (la federación crea correo y contraseña) | `capitan.prueba@ejemplo.com` |
 
-SQL admin (reemplazá el correo):
+En `.env.local` debe estar también `SUPABASE_SERVICE_ROLE_KEY` (API de Supabase) para crear capitanes desde la app.
+
+SQL para el primer administrador (reemplazá el correo; el usuario debe existir en Auth):
 
 ```sql
 update public.perfiles
@@ -39,7 +41,7 @@ set rol = 'admin_fab'
 where id = (select id from auth.users where email = 'TU_CORREO_ADMIN@ejemplo.com' limit 1);
 ```
 
-El capitán queda con rol `capitan` por defecto al registrarse.
+**No hay registro público:** `/registro` redirige a iniciar sesión. En Supabase → Authentication → Providers, desactivá **Sign ups** si querés bloquear altas fuera de la app.
 
 ---
 
@@ -85,7 +87,7 @@ Iniciá sesión como **admin**. Andá a **Gestión** (`/gestion`).
 En el detalle del torneo:
 
 1. **Nueva división:** `Liga A`, orden `1`.
-2. **Equipo 1:** club San Martín, nombre `San Martín A`, correo capitán = correo del usuario capitán de prueba.
+2. **Equipo 1:** club San Martín, nombre `San Martín A`, correo capitán = mismo correo creado en **Gestión → Capitanes**.
 3. **Equipo 2:** club Racing, nombre `Racing B` (sin capitán o con otro correo si probás dos capitanes).
 
 ### 2.5 Encuentro

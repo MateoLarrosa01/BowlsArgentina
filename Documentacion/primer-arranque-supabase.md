@@ -60,21 +60,24 @@ Esta guía asume que **todavía no tenés** proyecto en Supabase ni archivo `.en
 
 ---
 
-## 4. Auth: que el registro funcione sin fricción (recomendado en local)
+## 4. Variables para crear capitanes (service role)
 
-Para probar rápido sin abrir el correo:
+En `.env.local` agregá la clave **service_role** (solo servidor, nunca en el navegador):
 
-1. **Authentication** → **Providers** → **Email**: dejá habilitado.
-2. **Authentication** → **Sign In / Providers** (o en versiones nuevas: **Authentication** → **Emails**): desactivá **“Confirm email”** (confirmación de correo) mientras desarrollás, así el usuario queda logueado al instante después de **Registro**.
+```env
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+```
 
-En producción conviene volver a activar la confirmación.
+La encontrás en **Project Settings** → **API** → `service_role` (secret).
+
+En **Authentication** → **Providers** podés **desactivar Sign ups** para que nadie se registre por fuera de la app; los capitanes se crean en **Gestión → Capitanes**.
 
 ---
 
 ## 5. Tu usuario como administrador de la federación
 
-1. Arrancá la app: `npm run dev` y andá a **Registro**. Creá una cuenta con tu correo y contraseña.
-2. Volvé al **SQL Editor** de Supabase y ejecutá (reemplazá el correo por el tuyo):
+1. En Supabase **Authentication** → **Users** → **Add user** (o invitación por correo), creá tu cuenta de federación.
+2. En el **SQL Editor** ejecutá (reemplazá el correo por el tuyo):
 
    ```sql
    update public.perfiles
