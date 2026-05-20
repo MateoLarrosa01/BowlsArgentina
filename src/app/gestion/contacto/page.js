@@ -1,7 +1,19 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
+import { AlertasFlash } from "@/components/gestion/alertas-flash";
+import {
+  BotonCancelarEdicion,
+  FilaEdicion,
+  TablaGestion,
+  Td,
+  Th,
+} from "@/components/gestion/tabla-gestion";
+import { idEnDetalle, urlCerrarPanel, urlVer } from "@/lib/gestion/url-edicion";
 import { marcarMensajeLeido } from "./actions";
+
+const RUTA = "/gestion/contacto";
 
 function formatearFecha(iso) {
   try {
@@ -19,6 +31,7 @@ export default async function GestionContactoPage({ searchParams }) {
   const sp = await searchParams;
   const mensaje = sp.mensaje ? String(sp.mensaje) : null;
   const ok = sp.ok === "1";
+  const verId = idEnDetalle(sp);
 
   const { data: mensajes, error } = await supabase
     .from("mensajes_contacto")
@@ -46,65 +59,89 @@ export default async function GestionContactoPage({ searchParams }) {
         </p>
       </header>
 
-      {mensaje && (
-        <p className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
-          {mensaje}
-        </p>
-      )}
-      {ok && (
-        <p className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
-          Actualizado.
-        </p>
-      )}
+      <AlertasFlash mensaje={mensaje} ok={ok} okTexto="Actualizado." />
       {error && <p className="mt-6 text-sm text-red-700">{error.message}</p>}
 
-      {!mensajes?.length && (
-        <p className="mt-10 text-stone-600">Todavía no hay mensajes.</p>
-      )}
-
-      <ul className="mt-10 space-y-6">
-        {(mensajes ?? []).map((m) => (
-          <li
-            key={m.id}
-            className={`rounded-2xl border p-6 shadow-sm ${
-              m.leido ? "border-stone-200 bg-white" : "border-emerald-300 bg-emerald-50/40"
-            }`}
-          >
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <p className="font-semibold text-stone-900">
-                  {m.nombre} {m.apellido}
-                  {!m.leido && (
-                    <span className="ml-2 rounded-full bg-emerald-700 px-2 py-0.5 text-xs font-medium text-white">
-                      Nuevo
+      <section className="mt-10">
+        <TablaGestion vacio={!mensajes?.length && !error ? "Todavía no hay mensajes." : null}>
+          <thead>
+            <tr>
+              <Th>Fecha</Th>
+              <Th>Remitente</Th>
+              <Th>Correo</Th>
+              <Th>Estado</Th>
+              <Th className="text-right">Acciones</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {(mensajes ?? []).map((m) => (
+              <Fragment key={m.id}>
+                <tr
+                  className={
+                    verId === m.id
+                      ? "bg-emerald-50/40"
+                      : !m.leido
+                        ? "bg-emerald-50/20"
+                        : undefined
+                  }
+                >
+                  <Td className="whitespace-nowrap text-stone-600">{formatearFecha(m.creado_en)}</Td>
+                  <Td>
+                    <span className="font-medium">
+                      {m.nombre} {m.apellido}
                     </span>
-                  )}
-                </p>
-                <p className="text-sm text-stone-600">
-                  <a href={`mailto:${m.correo}`} className="text-emerald-800 hover:underline">
-                    {m.correo}
-                  </a>
-                  {" · "}
-                  {formatearFecha(m.creado_en)}
-                </p>
-              </div>
-              {!m.leido && (
-                <form action={marcarMensajeLeido}>
-                  <input type="hidden" name="id" value={m.id} />
-                  <button
-                    type="submit"
-                    className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm font-medium hover:bg-stone-50"
-                  >
-                    Marcar leído
-                  </button>
-                </form>
-              )}
-            </div>
-            <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-stone-800">{m.mensaje}</p>
-          </li>
-        ))}
-      </ul>
+                  </Td>
+                  <Td>
+                    <a href={`mailto:${m.correo}`} className="text-emerald-800 hover:underline">
+                      {m.correo}
+                    </a>
+                  </Td>
+                  <Td>
+                    {m.leido ? (
+                      <span className="text-stone-500">Leído</span>
+                    ) : (
+                      <span className="inline-flex rounded-full bg-emerald-700 px-2 py-0.5 text-xs font-medium text-white">
+                        Nuevo
+                      </span>
+                    )}
+                  </Td>
+                  <Td className="text-right">
+                    {verId !== m.id && (
+                      <a
+                        href={urlVer(RUTA, m.id)}
+                        className="inline-flex min-h-[36px] items-center rounded-lg border border-emerald-700 px-3 text-sm font-medium text-emerald-800 hover:bg-emerald-50"
+                      >
+                        Ver
+                      </a>
+                    )}
+                  </Td>
+                </tr>
+                {verId === m.id && (
+                  <FilaEdicion colSpan={5}>
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-800">
+                      {m.mensaje}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {!m.leido && (
+                        <form action={marcarMensajeLeido}>
+                          <input type="hidden" name="id" value={m.id} />
+                          <button
+                            type="submit"
+                            className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
+                          >
+                            Marcar leído
+                          </button>
+                        </form>
+                      )}
+                      <BotonCancelarEdicion href={urlCerrarPanel(sp, RUTA)} />
+                    </div>
+                  </FilaEdicion>
+                )}
+              </Fragment>
+            ))}
+          </tbody>
+        </TablaGestion>
+      </section>
     </ContenedorPagina>
   );
 }
-
