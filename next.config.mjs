@@ -26,6 +26,11 @@ const nextConfig = {
         destination: "/contacto",
         permanent: true,
       },
+      {
+        source: "/registro",
+        destination: "/iniciar-sesion",
+        permanent: true,
+      },
     ];
   },
 };

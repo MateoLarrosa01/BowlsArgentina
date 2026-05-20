@@ -115,7 +115,7 @@ export async function crearEquipo(formData) {
     if (errUid || !uid) {
       errTorneo(
         idTorneo,
-        "No encontramos un usuario registrado con ese correo de capitán.",
+        "No hay un capitán con ese correo. Crealo antes en Gestión → Capitanes.",
       );
     }
     idUsuarioCapitan = uid;

@@ -9,6 +9,11 @@ const tarjetas = [
     href: "/gestion/clubes",
   },
   {
+    titulo: "Capitanes",
+    descripcion: "Crear cuentas de capitán (correo y contraseña) para asignar a equipos.",
+    href: "/gestion/capitanes",
+  },
+  {
     titulo: "Jugadores",
     descripcion: "Alta de jugadores por club para armar planteles.",
     href: "/gestion/jugadores",

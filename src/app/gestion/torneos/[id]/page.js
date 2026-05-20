@@ -315,7 +315,7 @@ export default async function AdminTorneoDetallePage({ params, searchParams }) {
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-stone-600">
-                  Correo del capitán (usuario ya registrado)
+                  Correo del capitán (creado en Gestión → Capitanes)
                 </label>
                 <input
                   name="correo_capitan"

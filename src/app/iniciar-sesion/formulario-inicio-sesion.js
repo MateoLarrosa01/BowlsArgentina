@@ -125,13 +125,7 @@ export function FormularioInicioSesion() {
       </form>
 
       <p className="mt-6 text-center text-sm text-stone-600">
-        ¿No tenés cuenta?{" "}
-        <Link
-          href="/registro"
-          className="font-semibold text-emerald-800 underline-offset-2 hover:underline"
-        >
-          Registrate
-        </Link>
+        Las cuentas de capitán las crea la federación. Si no podés ingresar, contactá a la FAB.
       </p>
     </ContenedorPagina>
   );

@@ -132,12 +132,6 @@ export function CabeceraSitio() {
                 >
                   Entrar
                 </Link>
-                <Link
-                  href="/registro"
-                  className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-500 min-h-[40px] inline-flex items-center"
-                >
-                  Registro
-                </Link>
               </>
             )}
             {listo && sesion && (
