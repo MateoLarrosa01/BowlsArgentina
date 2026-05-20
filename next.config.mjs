@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  /** Túneles (Cloudflare, etc.) en desarrollo: evita bloqueos de origen cruzado. */
+  allowedDevOrigins: ["*.trycloudflare.com"],
   images: {
     remotePatterns: [
       {

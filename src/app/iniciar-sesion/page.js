@@ -1,17 +1,11 @@
-import { Suspense } from "react";
 import { ContenedorPagina } from "@/components/contenedor-pagina";
 import { FormularioInicioSesion } from "./formulario-inicio-sesion";
 
-export default function IniciarSesionPage() {
-  return (
-    <Suspense
-      fallback={
-        <ContenedorPagina className="max-w-md">
-          <p className="text-base text-stone-600">Cargando…</p>
-        </ContenedorPagina>
-      }
-    >
-      <FormularioInicioSesion />
-    </Suspense>
-  );
+export default async function IniciarSesionPage({ searchParams }) {
+  const sp = await searchParams;
+  const mensaje = sp.mensaje ? String(sp.mensaje) : null;
+  const siguiente =
+    sp.siguiente && String(sp.siguiente).startsWith("/") ? String(sp.siguiente) : "/panel";
+
+  return <FormularioInicioSesion siguiente={siguiente} mensaje={mensaje} />;
 }

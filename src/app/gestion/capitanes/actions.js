@@ -3,10 +3,19 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requerirAdministrador } from "@/lib/auth/requerir-admin";
+import { buscarUsuarioAuthPorCorreo } from "@/lib/gestion/buscar-usuario-auth";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
-function conMensaje(mensaje) {
-  redirect(`/gestion/capitanes?mensaje=${encodeURIComponent(mensaje)}`);
+function conMensaje(mensaje, tipo = "error") {
+  redirect(
+    `/gestion/capitanes?mensaje=${encodeURIComponent(mensaje)}&tipo=${tipo}`,
+  );
+}
+
+function conExito(correo, aviso) {
+  const params = new URLSearchParams({ ok: "1", correo });
+  if (aviso) params.set("aviso", aviso);
+  redirect(`/gestion/capitanes?${params.toString()}`);
 }
 
 export async function crearCapitan(formData) {
@@ -40,10 +49,53 @@ export async function crearCapitan(formData) {
   });
 
   if (error) {
-    const msg = error.message.includes("already")
-      ? "Ya existe un usuario con ese correo."
-      : error.message;
-    conMensaje(msg);
+    const yaExiste =
+      error.message.toLowerCase().includes("already") ||
+      error.message.toLowerCase().includes("registered");
+
+    if (yaExiste) {
+      const { user: existente, error: errBusqueda } = await buscarUsuarioAuthPorCorreo(
+        admin,
+        correo,
+      );
+      if (errBusqueda || !existente) {
+        conMensaje(
+          "Ese correo ya está registrado. Revisá el listado de abajo; si aparece, no hace falta crearlo de nuevo.",
+          "aviso",
+        );
+      }
+
+      const { data: perfil } = await admin
+        .from("perfiles")
+        .select("rol")
+        .eq("id", existente.id)
+        .maybeSingle();
+
+      if (perfil?.rol === "admin_fab" || perfil?.rol === "super_admin") {
+        conMensaje(
+          "Ese correo pertenece a un usuario de gestión de la federación, no a un capitán.",
+        );
+      }
+
+      const { error: errClave } = await admin.auth.admin.updateUserById(existente.id, {
+        password: clave,
+      });
+      if (errClave) {
+        conMensaje(errClave.message);
+      }
+
+      if (perfil?.rol !== "capitan") {
+        await admin.from("perfiles").update({ rol: "capitan" }).eq("id", existente.id);
+      }
+
+      revalidatePath("/gestion/capitanes");
+      conExito(
+        correo,
+        "La cuenta ya existía (figura en el listado). Se actualizó la contraseña con la que ingresaste.",
+      );
+    }
+
+    conMensaje(error.message);
   }
 
   if (!data.user) {
@@ -62,5 +114,5 @@ export async function crearCapitan(formData) {
   }
 
   revalidatePath("/gestion/capitanes");
-  redirect("/gestion/capitanes?ok=1&correo=" + encodeURIComponent(correo));
+  conExito(correo);
 }

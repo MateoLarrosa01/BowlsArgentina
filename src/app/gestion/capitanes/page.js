@@ -20,8 +20,10 @@ function formatearFecha(iso) {
 export default async function GestionCapitanesPage({ searchParams }) {
   const sp = await searchParams;
   const mensaje = sp.mensaje ? String(sp.mensaje) : null;
+  const tipoMensaje = sp.tipo === "aviso" ? "aviso" : "error";
   const ok = sp.ok === "1";
   const correoCreado = sp.correo ? String(sp.correo) : null;
+  const avisoOk = sp.aviso ? String(sp.aviso) : null;
 
   let capitanes = [];
   let errorListado = null;
@@ -59,14 +61,30 @@ export default async function GestionCapitanesPage({ searchParams }) {
         </p>
       )}
 
-      <AlertasFlash mensaje={mensaje} ok={ok} okTexto="Capitán creado correctamente." />
+      <AlertasFlash
+        mensaje={mensaje}
+        tipoMensaje={tipoMensaje}
+        ok={ok}
+        okTexto="Listo."
+      />
 
       {ok && correoCreado && (
         <p className="mt-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950">
-          Pasale al capitán su correo <strong>{correoCreado}</strong> y la contraseña que definiste.
-          Podrá ingresar en <strong>Iniciar sesión</strong> y ver <strong>Mis encuentros</strong>.
+          {avisoOk ?? (
+            <>
+              Pasale al capitán su correo <strong>{correoCreado}</strong> y la contraseña que
+              definiste. Podrá ingresar en <strong>Iniciar sesión</strong> y ver{" "}
+              <strong>Mis encuentros</strong>.
+            </>
+          )}
         </p>
       )}
+
+      <p className="mt-4 text-sm text-stone-600">
+        Si el correo ya figura en la tabla de abajo, la cuenta ya está creada: usá el formulario solo
+        para un capitán nuevo o para definir una contraseña nueva (se actualiza si el correo ya
+        existe).
+      </p>
 
       <section className="mt-10 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-stone-900">Nuevo capitán</h2>
